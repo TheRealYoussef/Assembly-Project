@@ -1,6 +1,7 @@
+#include <vector>
+
 #ifndef Mars_GLOBAL_h
 #define Mars_GLOBAL_h
-#include <vector>
 
 using namespace std;
 
