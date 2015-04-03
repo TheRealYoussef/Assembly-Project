@@ -1,0 +1,13 @@
+#ifndef Mars_GLOBAL_h
+#define Mars_GLOBAL_h
+#include <vector>
+
+using namespace std;
+
+
+bool  printLi=true;
+bool  printLa=true;
+vector<unsigned int> instfile;
+//simulator simulator;
+
+#endif
