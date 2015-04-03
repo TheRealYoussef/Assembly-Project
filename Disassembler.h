@@ -18,7 +18,7 @@ private:
     unsigned int instWord;
     ifstream inFile;
     string inFileName;
-     Instruction inst;
+    Instruction inst;
     bool isLui;
     bool isOri;
     
