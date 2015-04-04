@@ -2,7 +2,15 @@
 
 #include <iostream>
 
+#include <cstring>
+
 using namespace std;
+
+Memory::Memory()
+{
+	currAddress = 268500992;
+	memset(memory, 0, sizeof memory);
+}
 
 char Memory::loadByte(unsigned int addr)
 {
@@ -42,4 +50,26 @@ void Memory::storeWord(unsigned int addr, int val)
     memory[addr + 1] = (val >> 8) & 0xff;
     memory[addr + 2] = (val >> 16) & 0xff;
     memory[addr + 3] = (val >> 24);
+}
+
+void Memory::storeByte(char val)
+{
+	memory[currAddress] = val;
+	currAddress++;
+}
+
+void Memory::storeHalf(short val)
+{
+	memory[currAddress] = val & 0xff;
+	memory[currAddress + 1] = val >> 8;
+	currAddress += 2;
+}
+
+void Memory::storeWord(int val)
+{
+	memory[currAddress] = val & 0xff;
+	memory[currAddress + 1] = (val >> 8) & 0xff;
+	memory[currAddress + 2] = (val >> 16) & 0xff;
+	memory[currAddress + 3] = (val >> 24);
+	currAddress += 4;
 }
