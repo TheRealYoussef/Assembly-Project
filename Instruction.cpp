@@ -1,9 +1,12 @@
 #include "Instruction.h"
+
 #include <string>
 #include <stack>
 #include <cmath>
 #include <iostream>
+
 using namespace std;
+
 Instruction::Instruction()
 {
 }
@@ -25,8 +28,10 @@ void Instruction::assemble(string assemblyInstruction)
         setJFormat(instruction, idx);
     else if (instruction == "add" || instruction == "addu" || instruction == "sub" || instruction == "and" || instruction == "or" || instruction == "xor" || instruction == "slt" || instruction == "jr" || instruction == "sll" || instruction == "srl" || instruction == "syscall")
         setRFormat(instruction, idx);
-    else
-        setIFormat(instruction, idx);
+	else if (instruction == "lui" || instruction == "beq" || instruction == "bne" || instruction == "lw" || instruction == "sw" || instruction == "lb" || instruction == "sb" || instruction == "lh" || instruction == "sh" || instruction == "addi" || instruction == "addiu" || instruction == "andi" || instruction == "ori" || instruction == "xori")
+		setIFormat(instruction, idx);
+	else
+		opcode = -1;
 }
 
 void Instruction::dissassemble(unsigned int binaryInstruction)
@@ -47,7 +52,7 @@ void Instruction::dissassemble(unsigned int binaryInstruction)
         imm = (binaryInstruction & 0x0000FFFF);
         signedImm = (imm & 0x8000) ? (0xFFFF0000 | imm) : imm;
     }
-    else if( opcode == 2 || opcode == 3)
+    else if(opcode == 2 || opcode == 3)
     {
         address = (binaryInstruction & 0x3FFFFFF);
     }
@@ -544,7 +549,8 @@ void Instruction::setLui(int & idx)
         temp += assemblyInstruction[idx];
         idx++;
     }
-    imm = atoi(temp.c_str());
+    signedImm = atoi(temp.c_str());
+	imm = signedImm & 0x0000ffff;
 }
 
 void Instruction::setBranchInstruction(string instruction, int & idx)
@@ -576,7 +582,8 @@ void Instruction::setBranchInstruction(string instruction, int & idx)
         temp += assemblyInstruction[idx];
         idx++;
     }
-    imm = atoi(temp.c_str());
+	signedImm = atoi(temp.c_str());
+	imm = signedImm & 0x0000ffff;
 }
 
 void Instruction::setMemoryInstruction(string instruction, int & idx)
@@ -599,7 +606,8 @@ void Instruction::setMemoryInstruction(string instruction, int & idx)
         temp += tolower(assemblyInstruction[idx]);
         idx++;
     }
-    imm = atoi(temp.c_str());
+	signedImm = atoi(temp.c_str());
+	imm = signedImm & 0x0000ffff;
     temp = "";
     while (assemblyInstruction[idx] != '$')
         idx++;
@@ -640,7 +648,8 @@ void Instruction::setNormalIFormat(string instruction, int & idx)
         temp += tolower(assemblyInstruction[idx]);
         idx++;
     }
-    imm = atoi(temp.c_str());
+	signedImm = atoi(temp.c_str());
+	imm = signedImm & 0x0000ffff;
 }
 
 Instruction::InstructionFormat Instruction::getFormat() const
