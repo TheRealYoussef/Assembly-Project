@@ -6,6 +6,9 @@ using namespace std;
 
 class Memory
 {
+private:
+	//Address pointer for filling memory from data segment
+	unsigned int currAddress;
 public:
     char memory[4096];
     char loadByte(unsigned int);
@@ -14,6 +17,11 @@ public:
     void storeByte(unsigned int, char);
     void storeHalf(unsigned int, short);
     void storeWord(unsigned int, int);
+	//Filling memory from data segment
+	Memory();
+	void storeByte(char);
+	void storeHalf(short);
+	void storeWord(int);
 };
 
 #endif
