@@ -771,28 +771,22 @@ void Instruction::run()
                 simulator.andi(this);
                 break;
             case 0x23:
-                addr=getRs()+getSignedImm();
-                memory.loadWord(addr);
+                simulator.lw(this);
                 break;
             case 0x2B:
-                addr=getRs()+getSignedImm();
-                memory.storeWord(addr, getRt());
+                simulator.sw(this);
                 break;
             case 0x20:
-                addr=getRs()+getSignedImm();
-                memory.loadByte(addr);
+                simulator.lb(this);
                 break;
             case 0x28:
-                addr=getRs()+getSignedImm();
-                memory.storeByte(addr, getRt());
+                simulator.sb(this);
                 break;
             case 0x21:
-                addr=getRs()+getSignedImm();
-                memory.loadHalf(addr);
+                simulator.lh(this);
                 break;
             case 0x29:
-                addr=getRs()+getSignedImm();
-                memory.storeHalf(addr, getRt() );
+                simulator.sh(this);
                 break;
             case 0x0A:
                 simulator.slti(this);
