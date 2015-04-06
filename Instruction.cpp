@@ -711,3 +711,125 @@ string Instruction::getBinaryInstruction() const
 {
     return binaryInstruction;
 }
+
+void Instruction::run()
+{
+    if (opcode == 0)
+    {
+        switch (func)
+        {
+            case 0x08:
+                simulator.jr(this);
+                break;
+            case 0x20:
+                simulator.add(this);
+                break;
+            case 0x21:
+                simulator.addu(this);
+                break;
+            case 0x22:
+                simulator.sub(this);
+                break;
+            case 0x2A:
+                simulator.slt(this);
+                break;
+            case 0x00:
+                simulator.sll(this);
+                break;
+            case 0x02:
+                simulator.srl(this);
+                break;
+            case 0x24:
+                simulator.anding(this);
+                break;
+            case 0x25:
+                simulator.oring(this);
+                break;
+            case 0x26:
+                simulator.xoring(this);
+                break;
+            case 0x0C:
+                simulator.syscall(this);
+                break;
+            default:
+                cout<<"error";
+        }
+    }
+    else if (opcode != 0 && opcode != 2 && opcode != 3)
+    {
+        int addr;
+        switch (opcode)
+        {
+            case 0x08:
+                simulator.addi(this);
+                break;
+            case 0x09:
+                simulator.addiu(this);
+                break;
+            case 0x0C:
+                simulator.andi(this);
+                break;
+            case 0x23:
+                addr=getRs()+getSignedImm();
+                memory.loadWord(addr);
+                break;
+            case 0x2B:
+                addr=getRs()+getSignedImm();
+                memory.storeWord(addr, getRt());
+                break;
+            case 0x20:
+                addr=getRs()+getSignedImm();
+                memory.loadByte(addr);
+                break;
+            case 0x28:
+                addr=getRs()+getSignedImm();
+                memory.storeByte(addr, getRt());
+                break;
+            case 0x21:
+                addr=getRs()+getSignedImm();
+                memory.loadHalf(addr);
+                break;
+            case 0x29:
+                addr=getRs()+getSignedImm();
+                memory.storeHalf(addr, getRt() );
+                break;
+            case 0x0A:
+                simulator.slti(this);
+                break;
+            case 0x0D:
+                simulator.ori(this);
+                break;
+            case 0x0E:
+                simulator.xori(this);
+                break;
+            case 0x0F:
+                simulator.lui(this);
+                break;
+            case 0x04:
+                simulator.beq(this);
+                break;
+            case 0x05:
+                simulator.bne(this);
+                break;
+            default:
+                  cout<<"error";
+                break;
+        }
+    }
+    else if (opcode == 2 || opcode == 3)
+    {
+        switch (opcode) 
+        {
+            case 0x02:
+                simulator.j(this);
+                break;
+            case 0x03:
+                simulator.jal(this);
+                break;
+            default:
+                cout<<"error";
+                break;
+        }
+    }
+                
+}
