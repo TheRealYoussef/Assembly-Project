@@ -758,7 +758,6 @@ void Instruction::run()
     }
     else if (opcode != 0 && opcode != 2 && opcode != 3)
     {
-        int addr;
         switch (opcode)
         {
             case 0x08:
