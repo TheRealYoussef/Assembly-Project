@@ -20,14 +20,12 @@ char Memory::loadByte(unsigned int addr)
 
 int Memory::loadWord(unsigned int addr)
 {
-    addr -= 0x10010000;
-    return (memory[addr + 3] << 24) | (memory[addr + 2] << 16) | (memory[addr + 1] << 8) | memory[addr];
+    return ((unsigned char)(memory[addr + 3]) << 24) | ((unsigned char)(memory[addr + 2]) << 16) | ((unsigned char)(memory[addr + 1]) << 8) | (unsigned char)(memory[addr]);
 }
 
 short Memory::loadHalf(unsigned int addr)
 {
-    addr -= 0x10010000;
-    return (memory[addr + 1] << 8) | memory[addr];
+    return ((unsigned char)(memory[addr + 1]) << 8) | (unsigned char)(memory[addr]);
 }
 
 void Memory::storeByte(unsigned int addr, char val)
