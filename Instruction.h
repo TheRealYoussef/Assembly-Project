@@ -58,7 +58,6 @@ private:
     void setBranchInstruction(string, int &);
     void setMemoryInstruction(string, int &);
     void setNormalIFormat(string, int &);
-    // don't know eh el parameters f saybaha fadya for now bas hya hatkhod instruction 
     void run();
 };
 
