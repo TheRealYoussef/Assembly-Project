@@ -1,6 +1,5 @@
 #include <string>
 #include "GLOBALS.h"
-#include "Memory.h"
 using namespace std;
 
 #ifndef INSTRUCTION_H
@@ -8,7 +7,6 @@ using namespace std;
 
 class Instruction
 {
-	Memory memory; 
 	
 public:
     Instruction();
