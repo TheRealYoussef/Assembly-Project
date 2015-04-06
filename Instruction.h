@@ -1,5 +1,7 @@
 #include <string>
 #include "GLOBALS.h"
+#include "Memory.h"
+#include "simulator.h"
 using namespace std;
 
 #ifndef INSTRUCTION_H
@@ -7,6 +9,9 @@ using namespace std;
 
 class Instruction
 {
+	Memory memory; 
+	Simulator simulator; 
+	
 public:
     Instruction();
     void assemble(string);
@@ -55,6 +60,7 @@ private:
     void setBranchInstruction(string, int &);
     void setMemoryInstruction(string, int &);
     void setNormalIFormat(string, int &);
+    void run();
 };
 
 #endif
