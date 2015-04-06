@@ -1,11 +1,12 @@
 #include "Instruction.h"
-
+#include "simulator.h"
 #include <string>
 #include <stack>
 #include <cmath>
 #include <iostream>
 
 using namespace std;
+Simulator simulator; 
 
 Instruction::Instruction()
 {
