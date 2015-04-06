@@ -8,7 +8,7 @@ using namespace std;
 
 Memory::Memory()
 {
-	currAddress = 0;
+	currAddress = 268500992;
 	memset(memory, 0, sizeof memory);
 }
 
@@ -20,13 +20,11 @@ char Memory::loadByte(unsigned int addr)
 
 int Memory::loadWord(unsigned int addr)
 {
-	addr -= 0x10010000;
     return ((unsigned char)(memory[addr + 3]) << 24) | ((unsigned char)(memory[addr + 2]) << 16) | ((unsigned char)(memory[addr + 1]) << 8) | (unsigned char)(memory[addr]);
 }
 
 short Memory::loadHalf(unsigned int addr)
 {
-	addr -= 0x10010000;
     return ((unsigned char)(memory[addr + 1]) << 8) | (unsigned char)(memory[addr]);
 }
 
