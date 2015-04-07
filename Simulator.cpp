@@ -21,14 +21,14 @@ void Simulator::addu(Instruction* instruction)
 void Simulator::addi(Instruction* instruction)
 {
     // R[rt] = R[rs] + SignExtImm
-    cpu.registers[instruction->getRt()] = cpu.registers[instruction->getRs()] + cpu.registers[instruction->getSignedImm()];
+    cpu.registers[instruction->getRt()] = cpu.registers[instruction->getRs()] + instruction->getSignedImm();
 }
 
 void Simulator:: addiu(Instruction* instruction)
 {
     // change sign extension R[rt] = R[rs] + SignExtImm
     
-    cpu.registers[instruction->getRt()] = cpu.registers[instruction->getRs()] + cpu.registers[instruction->getSignedImm()];
+    cpu.registers[instruction->getRt()] = cpu.registers[instruction->getRs()] + instruction->getSignedImm();
                       
 }
 
@@ -47,18 +47,18 @@ void Simulator:: oring(Instruction* instruction)
 void Simulator:: ori(Instruction* instruction)
 {
     // missing zero extension immediate  R[rd] = R[rs] | R[rt]
-    cpu.registers[instruction->getRt()]= cpu.registers[instruction->getRs()] | cpu.registers[instruction->getImm()];
+    cpu.registers[instruction->getRt()]= cpu.registers[instruction->getRs()] | instruction->getImm();
 }
 void Simulator:: sll(Instruction* instruction)
 {
     //R[rd] = R[rt] << shamt
-    cpu.registers[instruction->getRd()] = cpu.registers[instruction->getRt()] << cpu.registers[instruction->getShamt()];
+    cpu.registers[instruction->getRd()] = cpu.registers[instruction->getRt()] << instruction->getShamt();
 }
 
 void Simulator:: srl(Instruction* instruction)
 {
     //R[rd] = R[rt] >> shamt
-    cpu.registers[instruction->getRd()] = (unsigned int)(cpu.registers[instruction->getRt()]) >> cpu.registers[instruction->getShamt()];
+    cpu.registers[instruction->getRd()] = (unsigned int)(cpu.registers[instruction->getRt()]) >> instruction->getShamt();
 }
 
 void Simulator:: anding(Instruction* instruction)
@@ -70,13 +70,13 @@ void Simulator:: anding(Instruction* instruction)
 void Simulator:: andi(Instruction* instruction)
 {
     //R[rt] = R[rs] & ZeroExtImm
-    cpu.registers[instruction->getRt()] = cpu.registers[instruction->getRs()] & cpu.registers[instruction->getImm()];
+    cpu.registers[instruction->getRt()] = cpu.registers[instruction->getRs()] & instruction->getImm();
     
 }
 
 void Simulator:: xori(Instruction* instruction)
 {
-    cpu.registers[instruction->getRt()] = cpu.registers[instruction->getRs()] ^ cpu.registers[instruction->getImm()];
+    cpu.registers[instruction->getRt()] = cpu.registers[instruction->getRs()] ^ instruction->getImm();
 }
 void Simulator:: xoring(Instruction* instruction)
 {
@@ -145,7 +145,7 @@ void Simulator::slt(Instruction* instruction)
 void Simulator::slti(Instruction* instruction)
 {
     ////R[rd] = (R[rs] < SignExtImm) ? 1 : 0
-    if(cpu.registers[instruction->getRs()] < cpu.registers[instruction->getSignedImm()])
+    if(cpu.registers[instruction->getRs()] < instruction->getSignedImm())
         cpu.registers[instruction->getRd()]=1;
     else
         cpu.registers[instruction->getRd()]=0;
