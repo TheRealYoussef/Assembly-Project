@@ -11,7 +11,7 @@ class Instruction
 public:
     Instruction();
     void assemble(string);
-    void dissassemble(unsigned int);
+       void dissassemble(unsigned int,int&, int&,bool&,bool&,bool&);
     enum InstructionFormat { R_FORMAT, I_FORMAT, J_FORMAT };
     InstructionFormat getFormat() const;
     int getOpcode() const;
@@ -41,7 +41,7 @@ private:
     int liImm;
     int signedImm;
     int address;
-	void setAssembleyInstruction();
+ 	void setAssembleyInstruction(int ,int,bool,bool,bool);
 	string registerToName(int) const;
     string toBinary(int, int, bool) const;
     string twosCompliment(string, int) const;
