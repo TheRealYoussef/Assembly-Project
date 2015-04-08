@@ -5,11 +5,14 @@
 #include "CPU.h"
 #include "Memory.h"
 #include "Instruction.h"
+#include "GLOBALS.H"
 
 class Simulator
 {
     Memory memory;
     CPU cpu;
+    Global globals;
+    vector <Instruction> program;
 public:
     Simulator();
     ~Simulator();
@@ -41,6 +44,7 @@ public:
     void jal(Instruction*);
     void lui(Instruction*);
     void syscall(Instruction*);
+    void simulate();
 };
 
 #endif /* defined(__Project_Assembly_1__Simulator__) */
