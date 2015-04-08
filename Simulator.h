@@ -2,6 +2,7 @@
 #define __Project_Assembly_1__Simulator__
 
 #include <iostream>
+#include <vector>
 #include "CPU.h"
 #include "Memory.h"
 #include "Instruction.h"
@@ -12,8 +13,9 @@ class Simulator
     Memory memory;
     CPU cpu;
     Global globals;
-    vector <Instruction> program;
+    
 public:
+    vector <Instruction> program;
     Simulator();
     ~Simulator();
     void add(Instruction*);
