@@ -222,3 +222,8 @@ void Simulator::simulate()
         program[i].run();
     } while(!globals.TERMINATE);
 }
+void Simulator:: displayRegister()
+{
+    for(int i=0; i<32; i++)
+        cout<<cpu.registers[i]<<endl;
+}
