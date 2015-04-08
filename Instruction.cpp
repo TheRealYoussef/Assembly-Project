@@ -24,15 +24,13 @@ void Instruction::assemble(string assemblyInstruction)
         instruction += tolower(assemblyInstruction[idx]);
         idx++;
     }
-    binaryInstruction = "";
-    if (instruction == "j" || instruction == "jal")
-        setJFormat(instruction, idx);
-    else if (instruction == "add" || instruction == "addu" || instruction == "sub" || instruction == "and" || instruction == "or" || instruction == "xor" || instruction == "slt" || instruction == "jr" || instruction == "sll" || instruction == "srl" || instruction == "syscall")
-        setRFormat(instruction, idx);
+   binaryInstruction = "";
+	if (instruction == "j" || instruction == "jal")
+		setJFormat(instruction, idx);
+	else if (instruction == "add" || instruction == "addu" || instruction == "sub" || instruction == "and" || instruction == "or" || instruction == "xor" || instruction == "slt" || instruction == "jr" || instruction == "sll" || instruction == "srl" || instruction == "syscall")
+		setRFormat(instruction, idx);
 	else if (instruction == "lui" || instruction == "beq" || instruction == "bne" || instruction == "lw" || instruction == "sw" || instruction == "lb" || instruction == "sb" || instruction == "lh" || instruction == "sh" || instruction == "addi" || instruction == "addiu" || instruction == "andi" || instruction == "ori" || instruction == "xori")
 		setIFormat(instruction, idx);
-	else
-		opcode = -1;
 }
 
 void Instruction::dissassemble(unsigned int binaryInstruction, int& trd, int& trt, bool& subi, bool& li, bool& la)
@@ -395,7 +393,7 @@ void Instruction::setJFormat(string instruction, int & idx)
         temp += assemblyInstruction[idx];
         idx++;
     }
-    address = atoi(temp.c_str());
+    address = hexaToDecimal(temp, 8);
     binaryInstruction += toBinary(opcode, 6, true);
     binaryInstruction += toBinary((address & 268435455) >> 2, 26, true);
 }
@@ -457,11 +455,12 @@ void Instruction::setShiftInstruction(string instruction, int & idx)
         temp += assemblyInstruction[idx];
         idx++;
     }
-    shamt = atoi(temp.c_str());
-    if (instruction == "sll")
-        func = 0;
-    else
-        func = 2;
+    if ((shamt = hexaToDecimal(temp, 2)) > 31)
+		TERMINATE = true;
+	if (instruction == "sll")
+		func = 0;
+	else
+		func = 2;
 }
 
 void Instruction::setJrInstruction(string instruction, int & idx)
@@ -563,7 +562,7 @@ void Instruction::setLui(int & idx)
         temp += assemblyInstruction[idx];
         idx++;
     }
-    signedImm = atoi(temp.c_str());
+    signedImm = hexaToDecimal(temp, 4);
 	imm = signedImm & 0x0000ffff;
 }
 
@@ -596,7 +595,7 @@ void Instruction::setBranchInstruction(string instruction, int & idx)
         temp += assemblyInstruction[idx];
         idx++;
     }
-	signedImm = atoi(temp.c_str());
+	signedImm = hexaToDecimal(temp, 4);
 	imm = signedImm & 0x0000ffff;
 }
 
@@ -620,7 +619,7 @@ void Instruction::setMemoryInstruction(string instruction, int & idx)
         temp += tolower(assemblyInstruction[idx]);
         idx++;
     }
-	signedImm = atoi(temp.c_str());
+	signedImm = hexaToDecimal(temp, 4);
 	imm = signedImm & 0x0000ffff;
     temp = "";
     while (assemblyInstruction[idx] != '$')
@@ -839,4 +838,32 @@ void Instruction::run()
         }
     }
                 
+}
+
+int Instruction::hexaToDecimal(const string & hexa, int n)
+{
+	if (hexa.length() > 2)
+	{
+		if (hexa[1] == 'x')
+		{
+			int ans = 0;
+			int i = hexa.length() - 1;
+			while (i >= 0 && n > 0)
+			{
+				if (hexa[i] >= '0' && hexa[i] <= '9')
+					ans += ((hexa[i] - '0') << (4 * (hexa.length() - 1 - i)));
+				else if (hexa[i] >= 'a' && hexa[i] <= 'f')
+					ans += ((hexa[i] - 'a' + 10) << (4 * (hexa.length() - 1 - i)));
+				else if (hexa[i] >= 'A' && hexa[i] <= 'F')
+					ans += ((hexa[i] - 'A' + 10) << (4 * (hexa.length() - 1 - i)));
+				i--;
+				n--;
+			}
+			return ans;
+		}
+		else
+			return atoi(hexa.c_str());
+	}
+	else
+		return atoi(hexa.c_str());
 }
