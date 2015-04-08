@@ -124,14 +124,14 @@ void Simulator::beq(Instruction* instruction)
 {
     //if(R[rs]==R[rt]) ,PC=PC+4+BranchAddr
     if(cpu.registers[instruction->getRs()]==cpu.registers[instruction->getRt()])
-        cpu.programCounter=cpu.programCounter+instruction->getSignedImm();
+        cpu.programCounter=cpu.programCounter+(instruction->getSignedImm()*4);
     
 }
 void Simulator::bne(Instruction* instruction)
 {
      //if(R[rs]!=R[rt]) ,PC=PC+4+BranchAddr
     if(cpu.registers[instruction->getRs()]!=cpu.registers[instruction->getRt()])
-        cpu.programCounter=cpu.programCounter+instruction->getSignedImm();
+        cpu.programCounter=cpu.programCounter+(instruction->getSignedImm()*4);
     
 }
 void Simulator::slt(Instruction* instruction)
