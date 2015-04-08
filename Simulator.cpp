@@ -206,8 +206,19 @@ void Simulator::syscall(Instruction* instruction)
             break;
             //terminate execution
         case 10:
-        cout<< cpu.registers[4];
+        globals.TERMINATE=true;
             break;
 }
 }
 
+void Simulator::simulate()
+{
+    int i;
+    do{
+        i=(cpu.programCounter-0x04000000)/4;
+        cpu.programCounter+=4;
+        if (i>=program.size())
+            break;
+        program[i].run();
+    } while(!globals.TERMINATE);
+}
