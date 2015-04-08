@@ -85,3 +85,24 @@ void Memory::storeWord(int val)
 	memory[currAddress + 3] = (val >> 24);
 	currAddress += 4;
 }
+
+void Memory::MemoryArray(string path)
+{
+    int i=0;
+    ifstream in;
+    in.open(path.c_str());
+    if(in.is_open())
+    {
+        while (!in.eof() && i<4096 )
+        {
+           in.get(memory[i]);
+           i++;
+        }
+    }
+    else
+    {
+        cerr<<"ERROR in opening memory file\n";
+    }
+}
+
+
