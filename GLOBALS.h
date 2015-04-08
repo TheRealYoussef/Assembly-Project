@@ -5,7 +5,7 @@
 
 using namespace std;
 
-
+bool terminate=false; 
 bool  printLi=true;
 bool  printLa=true;
 vector<unsigned int> instfile;
