@@ -25,6 +25,7 @@ public:
     int getAddress() const;
     string getAssemblyInstruction() const;
     string getBinaryInstruction() const;
+    void run();
 private:
     string assemblyInstruction;
     string binaryInstruction;
@@ -56,7 +57,7 @@ private:
     void setBranchInstruction(string, int &);
     void setMemoryInstruction(string, int &);
     void setNormalIFormat(string, int &);
-    void run();
+    
 };
 
 #endif
