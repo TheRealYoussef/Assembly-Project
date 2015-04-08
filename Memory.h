@@ -17,6 +17,7 @@ public:
     void storeByte(unsigned int, char);
     void storeHalf(unsigned int, short);
     void storeWord(unsigned int, int);
+    void MemoryArray(string )
 	//Filling memory from data segment
 	Memory();
 	void storeByte(char);
