@@ -169,7 +169,7 @@ void Simulator::jal(Instruction* instruction)
     //R[31]=PC+8;PC=JumpAddr
     
     cpu.registers[31]=cpu.programCounter;
-    cpu.programCounter+=(cpu.programCounter & 0xf0000000)|(instruction->getAddress() << 2);
+    cpu.programCounter=(cpu.programCounter & 0xf0000000)|(instruction->getAddress() << 2);
     
 }
 
