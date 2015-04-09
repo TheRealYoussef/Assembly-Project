@@ -49,6 +49,7 @@ public:
     void lui(Instruction*);
     void syscall(Instruction*);
     void simulate();
+    void displayRegister()
 };
 
 #endif /* defined(__Project_Assembly_1__Simulator__) */
