@@ -1,4 +1,5 @@
 #include "Simulator.h"
+#include <iomanip>
 
 Simulator::Simulator(){}
 
@@ -222,8 +223,112 @@ void Simulator::simulate()
         program[i].run();
     } while(!globals.TERMINATE);
 }
+
+void Simulator::initializeName()
+{
+    int i=0;
+    switch(i)
+    {
+        case 0:
+            registerName[i]="$zero";
+            break;
+        case 1:
+            registerName[i]="$at";
+            break;
+        case 2:
+            registerName[i]="$v0";
+            break;
+        case 3:
+            registerName[i]="$v1";
+            break;
+        case 4:
+            registerName[i]="$a0";
+            break;
+        case 5:
+            registerName[i]="$a1";
+            break;
+        case 6:
+            registerName[i]="$a2";
+            break;
+        case 7:
+            registerName[i]="$a3";
+            break;
+        case 8:
+            registerName[i]="$t0";
+            break;
+        case 9:
+            registerName[i]="$t1";
+            break;
+        case 10:
+            registerName[i]="$t2";
+            break;
+        case 11:
+            registerName[i]="$t3";
+            break;
+        case 12:
+            registerName[i]="$t4";
+            break;
+        case 13:
+            registerName[i]="$t5";
+            break;
+        case 14:
+            registerName[i]="$t6";
+            break;
+        case 15:
+            registerName[i]="$t7";
+            break;
+        case 16:
+            registerName[i]="$s0";
+            break;
+        case 17:
+            registerName[i]="$s1";
+            break;
+        case 18:
+            registerName[i]="$s2";
+            break;
+        case 19:
+            registerName[i]="$s3";
+            break;
+        case 20:
+            registerName[i]="$s4";
+            break;
+        case 21:
+            registerName[i]="$s5";
+            break;
+        case 22:
+            registerName[i]="$s6";
+            break;
+        case 23:
+            registerName[i]="$s7";
+            break;
+        case 24:
+            registerName[i]="$t8";
+            break;
+        case 25:
+            registerName[i]="$t9";
+            break;
+        case 26:
+            registerName[i]="$k0";
+            break;
+        case 27:
+            registerName[i]="$k1";
+            break;
+        case 28:
+            registerName[i]="$gp";
+            break;
+        case 29:
+            registerName[i]="$sp";
+            break;
+        case 30:
+            registerName[i]="$fp";
+            break;
+        case 31:
+            registerName[i]="$ra";
+            break;
+    }
+}
 void Simulator:: displayRegister()
 {
     for(int i=0; i<32; i++)
-        cout<<cpu.registers[i]<<endl;
+        cout<<registerName[i]<<setw(15)<<i<<setw(15)<<cpu.registers[i]<<endl;
 }
