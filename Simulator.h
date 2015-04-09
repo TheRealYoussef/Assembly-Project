@@ -10,11 +10,9 @@
 
 class Simulator
 {
-    Memory memory;
-    CPU cpu;
-    Global globals;
-    
 public:
+    CPU cpu;
+    Memory memory;
     string registerName[32];
     void initializeName();
     vector <Instruction> program;
