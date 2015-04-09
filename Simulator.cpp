@@ -329,6 +329,7 @@ void Simulator::initializeName()
 }
 void Simulator:: displayRegister()
 {
+    cout<<"Name"<<setw(30)<<"Number"<<setw(30)<<"Value"<<endl;
     for(int i=0; i<32; i++)
-        cout<<registerName[i]<<setw(15)<<i<<setw(15)<<cpu.registers[i]<<endl;
+        cout<<registerName[i]<<setw(30)<<i<<setw(30)<<cpu.registers[i]<<endl;
 }
