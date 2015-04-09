@@ -187,7 +187,7 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
                 assemblyInstruction = "xori " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
                 break;
             case 0x0F:
-                pseudo = "lui " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
+                pseudo = "lui " + registerToName(rt) + ", " + to_string(imm);
                 if (li == false && la == false)
                     assemblyInstruction = pseudo;
                 else
