@@ -33,7 +33,7 @@ void Instruction::assemble(string assemblyInstruction)
 		setIFormat(instruction, idx);
 }
 
-void Instruction::dissassemble(unsigned int binaryInstruction, int& trd, int& trt, bool& subi, bool& li, bool& la)
+void Instruction::dissassemble(unsigned int binaryInstruction, int trd, int trt, bool subi, bool li, bool la)
 {
     opcode = binaryInstruction >> 26;
     if (opcode == 0)
