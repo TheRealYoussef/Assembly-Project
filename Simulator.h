@@ -15,6 +15,8 @@ class Simulator
     Global globals;
     
 public:
+    string registerName[32];
+    void initializeName();
     vector <Instruction> program;
     Simulator();
     ~Simulator();
