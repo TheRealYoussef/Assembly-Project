@@ -327,9 +327,16 @@ void Simulator::initializeName()
             break;
     }
 }
-void Simulator:: displayRegister()
+
+void Simulator:: displayRegister(string path)
 {
-    cout<<"Name"<<setw(30)<<"Number"<<setw(30)<<"Value"<<endl;
-    for(int i=0; i<32; i++)
-        cout<<registerName[i]<<setw(30)<<i<<setw(30)<<cpu.registers[i]<<endl;
-}
+    outfile.open(path.c_str())
+    if(outfile.is_open())
+    {
+        outfile<<"Name"<<setw(30)<<"Number"<<setw(30)<<"Value"<<endl;
+        for(int i=0; i<32; i++)
+            outfile<<registerName[i]<<setw(30)<<i<<setw(30)<<cpu.registers[i]<<endl;
+    }
+    else
+        cerr<<"Error in opening output file\n”;
+        }

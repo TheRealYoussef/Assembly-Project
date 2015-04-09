@@ -14,6 +14,7 @@ public:
     CPU cpu;
     Memory memory;
     string registerName[32];
+    ofstream outfile;
     void initializeName();
     vector <Instruction> program;
     Simulator();
