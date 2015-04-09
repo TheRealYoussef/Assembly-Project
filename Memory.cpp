@@ -38,8 +38,11 @@ void Memory::storeByte(unsigned int addr, char val)
 
 void Memory::storeHalf(unsigned int addr, short val)
 {
-    if (currAddress%2!=0)
+    if (addr%2!=0)
+    {
     cout<<"Error";
+    TERMINATE=true;
+    }
     else
     {
     addr -= 0x10010000;
@@ -50,8 +53,11 @@ void Memory::storeHalf(unsigned int addr, short val)
 
 void Memory::storeWord(unsigned int addr, int val)
 {
-     if (currAddress%4!=0)
+     if (adrr%4!=0)
+     {
     cout<<"Error";
+    TERMINATE=true; 
+     }
     else
     {
     addr -= 0x10010000;
@@ -102,6 +108,7 @@ void Memory::MemoryArray(string path)
     else
     {
         cerr<<"ERROR in opening memory file\n";
+        TERMINATE=true;
     }
 }
 
