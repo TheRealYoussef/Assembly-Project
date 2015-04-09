@@ -1,4 +1,6 @@
 #include "Disassembler.h"
+#include <iostream>
+using namespace std;
 
 disassembler::disassembler(string x){
     inFileName =x;

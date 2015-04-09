@@ -1,6 +1,7 @@
 #ifndef __Mars__Disassembler__
 #define __Mars__Disassembler__
 #include "Instruction.h"
+#include <fstream>
 
 class disassembler{
     
