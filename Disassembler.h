@@ -2,6 +2,7 @@
 #define __Mars__Disassembler__
 #include "Instruction.h"
 #include <fstream>
+#include <vector>
 
 class disassembler{
     
@@ -9,6 +10,7 @@ public:
     disassembler(string);
     void getData();
     void display();
+    int getSImm(int) const;
 private:
     char c;
     unsigned int instWord;
@@ -18,7 +20,8 @@ private:
     vector<unsigned int> instfile;
     vector<string>labels;
     unsigned int address;
-    int offset;
+    int jumpIndex;
+    int branchIndex;
     int brOffset=0;
     Instruction x;
     unsigned int pc=0x00400000;
