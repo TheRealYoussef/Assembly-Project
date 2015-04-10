@@ -116,7 +116,7 @@ void Memory::MemoryArray(string path)
 void Memory::memoryDump()
 {
 	ofstream output(memoryDumpFile.c_str());
-	for (int i = 0; i < 4096; i++)
+	for (int i = 0; i < 8192; i++)
 		output << memory[i];
 	output.close();
 }
