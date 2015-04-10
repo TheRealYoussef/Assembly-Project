@@ -4,13 +4,15 @@
 #include <fstream>
 #include <vector>
 
-class disassembler{
+class Disassembler{
     
 public:
-    disassembler(string);
+    Disassembler(string);
     void getData();
     void display();
-    int getSImm(int) const;
+    void simulatorData(vector<Instruction>&);
+    int getOpcode(int) const;
+    int getSImm(int);
 private:
     char c;
     unsigned int instWord;
@@ -32,8 +34,9 @@ private:
     bool isAddi;
     bool isSub;
     bool isSubu;
+    bool  pLi;
+    bool pLi2;
     bool  printLi;
-    bool  printLa;
     bool printSubi;
     bool printSubiu;
     

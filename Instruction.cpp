@@ -53,15 +53,15 @@ void Instruction::dissassemble(unsigned int binaryInstruction, int trd, int trt,
     {
         address = (binaryInstruction & 0x3FFFFFF);
     }
-     int temp_rd=trd;
+    int temp_rd=trd;
     int temp_rt=trt;
-    bool psubi=subi, pLa=la,pLi=li;
-    setAssembleyInstruction(temp_rd ,temp_rt, psubi,pLi ,pLa);
+    bool psubi=subi,pLi=li;
+    setAssembleyInstruction(temp_rd ,temp_rt, psubi,pLi );
     checkSubi = subi;
 }
 
 
-void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li,bool la)
+void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li)
 {
     
     if (opcode == 0)
@@ -87,7 +87,6 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
                     assemblyInstruction = "subi " + registerToName(rd) + ", " + registerToName(rs) + ", " + to_string(signedImm);
                 else
                     assemblyInstruction = "sub " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
-                
                 break;
             case 0x23:
                 assemblyInstruction = "subu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
@@ -133,7 +132,7 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
             case 0x08:
                 if (rs == 0 && subi == false)
                     assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
-                else//CHeck on different test cases
+                else //CHeck on different test cases
                     if (subi == 1) {
                         assemblyInstruction ="";
                     }
@@ -175,10 +174,10 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
                 break;
             case 0x0D:
                 pseudo = "ori " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
-                if (li == false && la == false)
+                if (li == false)
                     assemblyInstruction = pseudo;
                 else
-                    if(li == true &&la == true)
+                    if(li == true)
                         assemblyInstruction = "li " + registerToName(rt) + ", " + to_string((imm<<16) + liImm);
                 break;
             case 0x0E:
@@ -186,7 +185,7 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
                 break;
             case 0x0F:
                 pseudo = "lui " + registerToName(rt) + ", " + to_string(imm);
-                if (li == false && la == false)
+                if (li == false)
                     assemblyInstruction = pseudo;
                 else
                     liImm = imm;
@@ -219,7 +218,6 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
         }
     }
 }
-
 
 string Instruction::registerToName(int reg) const
 {

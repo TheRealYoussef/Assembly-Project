@@ -2,14 +2,13 @@
 #include <iostream>
 using namespace std;
 
-disassembler::disassembler(string x){
+Disassembler::Disassembler(string x){
     inFileName =x;
     getData();
-    display();
     
 }
 
-void disassembler::getData(){
+void Disassembler::getData(){
     inFile.open(inFileName.c_str());
     
     // If the file is open (this will evaluate to false if the file could not be found)
@@ -41,10 +40,31 @@ void disassembler::getData(){
         }
         
     }
+    else
+        cerr<<"error in opening disassembling file\n";
     
+    for (int i = 0 ; i < instfile.size() ; i++) {
+        isLui   = (instfile[i-1] >> 26 == 0x0F);
+        isOri   = (instfile[i] >> 26 == 0x0D);
+        isAddi  = (instfile[i] >> 26 == 0x08);
+        isSub   = (instfile[i+1] >>26 == 0);
+        temp_rd = (instfile[i+1] >> 11) & 0x1f;
+        temp_rt = (instfile[i+1] >> 21) & 0x1f;
+        
+        pLi = ((instfile[i] >> 26 == 0x0F) && instfile[i+1] >> 26 == 0x0D);
+        pLi2 = ((instfile[i-1] >> 26 == 0x0F) &&(instfile[i] >> 26 == 0x0D));
+        printLi = (pLi || pLi2);
+        printSubi=(isAddi && isSub);
+        
+        
+        x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,printLi); // calling the disassebling process
+        inst.push_back(x);
+        
+    }
     
 }
-void disassembler::display(){
+
+void Disassembler::display(){
     //set vector label to the size of the instructions
     labels.resize(instfile.size());
     
@@ -52,8 +72,8 @@ void disassembler::display(){
     
     for (int i=0; i < instfile.size();i++)
     {
-        address =  (instfile[i]& 0x3FFFFFF) << 2; // extracting the address
-        jumpIndex= (address-0x00400000)/4; //the index of the label
+        address =  (instfile[i] & 0x3FFFFFF) << 2; // extracting the address
+        jumpIndex= (address - 0x00400000)/4; //the index of the label
         branchIndex = i + 1 + getSImm(i);
         
         //if j or jal, store the labels based on it's address
@@ -71,54 +91,45 @@ void disassembler::display(){
     }
     
     for (int i = 0 ; i < instfile.size() ; i++) {
-        isLui   = (instfile[i+1] == 0x0F);
-        isOri   = (instfile[i+1] >>26 == 0x0D);
-        isAddi  = (instfile[i] >> 26 == 0x08);
-        isSub   = (instfile[i+1] >>26 == 0);
-        temp_rd = (instfile[i+1] >> 11) & 0x1f;
-        temp_rt = (instfile[i+1] >> 21) & 0x1f;
-        
-        printLi=(isLui && isOri);
-        printSubi=(isAddi && isSub);
-        
-        
-        x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,printLi,printLa); // calling the disassebling process
-        inst.push_back(x);
         
         //Printing labels
         if (labels[i] !="" )
             cout <<endl<<labels[i] << "          " << endl;
         
-        if (x.getAssemblyInstruction() !="")
+        if (inst[i].getAssemblyInstruction() !="")
         {
             // printing j and jal with label
-            if (x.getOpcode() == 2 || x.getOpcode() == 3)
+            if (inst[i].getOpcode() == 2 || inst[i].getOpcode() == 3)
             {
-                jumpIndex = ( (x.getAddress()<<2) - 0x00400000) / 4;
+                jumpIndex = ( (inst[i].getAddress()<<2) - 0x00400000) / 4;
                 long len =labels[jumpIndex].length()-1;
                 string jString =labels[jumpIndex];
-                cout << "          " << x.getAssemblyInstruction() << jString.erase(abs(len - 1)) <<endl << endl; //erase is used to erase the ":"
+                cout << "          " << inst[i].getAssemblyInstruction() << jString.erase(abs(len - 1)) <<endl << endl; //erase is used to erase the ":"
             }
             else
-                if ( x.getOpcode() == 0x04 || x.getOpcode() == 0x05 )
+                if ( inst[i].getOpcode() == 0x04 || inst[i].getOpcode() == 0x05 )
                 {
                     //printing beq and bne with label
                     branchIndex = i + 1+ getSImm(i);
                     long len1 = labels[branchIndex].length()-1;
                     string brString = labels[branchIndex];
-                    cout << "          " << x.getAssemblyInstruction() << brString.erase(len1 - 1) << endl;
+                    cout << "          " << inst[i].getAssemblyInstruction() << brString.erase(len1 - 1) << endl;
                 }
                 else
-                    cout <<"          "<< x.getAssemblyInstruction() << endl;
+                    cout <<"          "<< inst[i].getAssemblyInstruction() << endl;
         }
     }
 }
 
 
-int disassembler:: getSImm(int i) const
-{
+int Disassembler:: getSImm(int i){
     
     int imm = (instfile[i] & 0xFFFF);
     
     return ((imm & 0x8000) ? (0xFFFF0000 | imm) : imm);
+}
+
+void Disassembler::simulatorData(vector<Instruction>& x)
+{
+    x = inst;
 }
