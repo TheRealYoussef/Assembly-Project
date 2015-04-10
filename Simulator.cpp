@@ -248,7 +248,7 @@ void Simulator::run(Instruction *instruction)
 			syscall(instruction);
 			break;
 		default:
-			cerr << "Error\n";
+			cerr << "Error in extracting R- Format in simulator\n";
 		}
 	}
 	else if (instruction->getOpcode() != 0 && instruction->getOpcode() != 2 && instruction->getOpcode() != 3)
@@ -301,7 +301,7 @@ void Simulator::run(Instruction *instruction)
 			bne(instruction);
 			break;
 		default:
-			cerr << "Error\n";
+			cerr << "Error in extracting I- Format in simulator\n";
 			break;
 		}
 	}
@@ -316,7 +316,7 @@ void Simulator::run(Instruction *instruction)
 			jal(instruction);
 			break;
 		default:
-			cerr << "Error\n";
+			cerr << "Error in extracting J- Format in simulator\n";
 			break;
 		}
 	}
