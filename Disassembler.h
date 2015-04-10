@@ -1,6 +1,7 @@
 #ifndef __Mars__Disassembler__
 #define __Mars__Disassembler__
 #include "Instruction.h"
+#include "Simulator.h"
 #include <fstream>
 #include <vector>
 
@@ -10,10 +11,10 @@ public:
     Disassembler(string);
     void getData();
     void display();
-    void simulatorData(vector<Instruction>&);
     int getOpcode(int) const;
     int getSImm(int);
 private:
+    Simulator simulator;
     char c;
     unsigned int instWord;
     ifstream inFile;
