@@ -100,7 +100,7 @@ void Memory::MemoryArray(string path)
     in.open(path.c_str());
     if(in.is_open())
     {
-        while (!in.eof() && i<4096 )
+        while (!in.eof() && i<8192 )
         {
            in.get(memory[i]);
            i++;
