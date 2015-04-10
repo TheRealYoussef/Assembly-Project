@@ -225,7 +225,7 @@ string Instruction::registerToName(int reg) const
     string name;
     switch (reg) {
         case 0:
-            name = "$Zero";
+            name = "$zero";
             break;
         case 1:
             name = "$at";

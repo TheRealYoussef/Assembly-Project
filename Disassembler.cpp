@@ -45,12 +45,13 @@ void Disassembler::getData(){
     
     for (int i = 0 ; i < instfile.size(); i++) {
         isAddi  = (instfile[i] >> 26 == 0x08);
+        
+        if (i<instfile.size()-1){
         isSub   = (instfile[i+1] >>26 == 0);
         temp_rd = (instfile[i+1] >> 11) & 0x1f;
         temp_rt = (instfile[i+1] >> 21) & 0x1f;
-        
-        if (i<instfile.size()-1)
             pLi = ((instfile[i] >> 26 == 0x0F) && instfile[i+1] >> 26 == 0x0D);
+        }
         else
             pLi=false;
         if (i>0)
