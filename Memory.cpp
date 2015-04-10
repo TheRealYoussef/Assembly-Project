@@ -1,4 +1,5 @@
 #include "Memory.h"
+#include "GLOBALS.h"
 
 #include <iostream>
 #include <fstream>
@@ -38,28 +39,34 @@ void Memory::storeByte(unsigned int addr, char val)
 
 void Memory::storeHalf(unsigned int addr, short val)
 {
-    if (addr%2!=0)
-    cout<<"Error";
-    else
-    {
-    addr -= 0x10010000;
-    memory[addr] = val & 0xff;
-    memory[addr + 1] = val >> 8;
-    }
+	if (addr % 2 != 0)
+	{
+		cout << "Error";
+		TERMINATE = true;
+	}
+	else
+	{
+		addr -= 0x10010000;
+		memory[addr] = val & 0xff;
+		memory[addr + 1] = val >> 8;
+	}
 }
 
 void Memory::storeWord(unsigned int addr, int val)
 {
-     if (addr%4!=0)
-    cout<<"Error";
-    else
-    {
-    addr -= 0x10010000;
-    memory[addr] = val & 0xff;
-    memory[addr + 1] = (val >> 8) & 0xff;
-    memory[addr + 2] = (val >> 16) & 0xff;
-    memory[addr + 3] = (val >> 24);
-    }
+	if (addr % 4 != 0)
+	{
+		cout << "Error";
+		TERMINATE = true;
+	}
+	else
+	{
+		addr -= 0x10010000;
+		memory[addr] = val & 0xff;
+		memory[addr + 1] = (val >> 8) & 0xff;
+		memory[addr + 2] = (val >> 16) & 0xff;
+		memory[addr + 3] = (val >> 24);
+	}
 }
 
 void Memory::storeByte(char val)
@@ -102,6 +109,7 @@ void Memory::MemoryArray(string path)
     else
     {
         cerr<<"ERROR in opening memory file\n";
+		TERMINATE = true;
     }
 }
 
