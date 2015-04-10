@@ -43,21 +43,25 @@ void Disassembler::getData(){
     else
         cerr<<"error in opening disassembling file\n";
     
-    for (int i = 0 ; i < instfile.size() ; i++) {
-        isLui   = (instfile[i-1] >> 26 == 0x0F);
-        isOri   = (instfile[i] >> 26 == 0x0D);
+    for (int i = 0 ; i < instfile.size(); i++) {
         isAddi  = (instfile[i] >> 26 == 0x08);
         isSub   = (instfile[i+1] >>26 == 0);
         temp_rd = (instfile[i+1] >> 11) & 0x1f;
         temp_rt = (instfile[i+1] >> 21) & 0x1f;
         
-        pLi = ((instfile[i] >> 26 == 0x0F) && instfile[i+1] >> 26 == 0x0D);
-        pLi2 = ((instfile[i-1] >> 26 == 0x0F) &&(instfile[i] >> 26 == 0x0D));
+        if (i<instfile.size()-1)
+            pLi = ((instfile[i] >> 26 == 0x0F) && instfile[i+1] >> 26 == 0x0D);
+        else
+            pLi=false;
+        if (i>0)
+            pLi2 = ((instfile[i-1] >> 26 == 0x0F) && (instfile[i] >> 26 == 0x0D));
+        else
+            pLi2 = false;
         printLi = (pLi || pLi2);
         printSubi=(isAddi && isSub);
         
         
-       x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,printLi); // calling the disassebling process
+        x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,printLi); // calling the disassebling process
         inst.push_back(x);
         simulator.program.push_back(x);
         
@@ -88,7 +92,7 @@ void Disassembler::display(){
             if ( (instfile[i] >> 26) == 0x04 || (instfile[i] >> 26) == 0x05 )
                 labels[branchIndex] = "label_"+ to_string(counter++) + ": ";
         
-     
+        
     }
     
     for (int i = 0 ; i < instfile.size() ; i++) {
