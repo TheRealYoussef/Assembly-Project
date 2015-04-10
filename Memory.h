@@ -11,7 +11,7 @@ private:
 	unsigned int currAddress;
 	const string memoryDumpFile = "Memory Dump.txt";
 public:
-    char memory[4096];
+    char memory[8192];
     char loadByte(unsigned int);
     int loadWord(unsigned int);
     short loadHalf(unsigned int);
