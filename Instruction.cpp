@@ -73,13 +73,13 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
                 assemblyInstruction = "jr " + registerToName(rs);
                 break;
             case 0x20:
-                if (rt == 0) {
-                    assemblyInstruction = "move " + registerToName(rd) + ", " + registerToName(rs);
-                }
-                else
                     assemblyInstruction = "add " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x21:
+                if (rs == 0) {
+                    assemblyInstruction = "move " + registerToName(rd) + ", " + registerToName(rt);
+                }
+                else
                 assemblyInstruction = "addu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x22:
@@ -179,7 +179,7 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
                     assemblyInstruction = pseudo;
                 else
                     if(li == true)
-                        assemblyInstruction = "li " + registerToName(rt) + ", " + to_string((imm<<16) + liImm);
+                        assemblyInstruction = "li " + registerToName(rt) + ", " + to_string((liImm<<16) + imm);
                 break;
             case 0x0E:
                 assemblyInstruction = "xori " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
