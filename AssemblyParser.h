@@ -1,9 +1,12 @@
 #include "Memory.h"
 #include "GLOBALS.h"
 
+#include "Instruction.h"
+
 #include <string>
 #include <fstream>
 #include <map>
+#include <vector>
 
 using namespace std;
 
@@ -15,11 +18,7 @@ class AssemblyParser
 
 private:
 
-	ifstream input;
-
-	const string assemblyFile = "assembly.txt";
-
-	ofstream output;
+	const string textDumpFile = "Text Dump.txt";
 
 	map<string, unsigned int>labels;
 
@@ -31,7 +30,7 @@ private:
 
 	void parseData(const string &, Memory &);
 
-	void parseText(const string &);
+	void parseText(const string &, vector<Instruction> &);
 
 	int wordHexaToDecimal(const string &);
 	
@@ -39,9 +38,11 @@ private:
 
 	char byteHexaToDecimal(const string &);
 
+	vector<char> toChar(const string &);
+
 public:
 
-	AssemblyParser(const string &, Memory &);
+	AssemblyParser(const string &, Memory &, vector<Instruction> &);
 
 };
 

@@ -9,6 +9,7 @@ class Memory
 private:
 	//Address pointer for filling memory from data segment
 	unsigned int currAddress;
+	const string memoryDumpFile = "Memory Dump.txt";
 public:
     char memory[4096];
     char loadByte(unsigned int);
@@ -17,7 +18,8 @@ public:
     void storeByte(unsigned int, char);
     void storeHalf(unsigned int, short);
     void storeWord(unsigned int, int);
-    void MemoryArray(string )
+	void MemoryArray(string);
+	void memoryDump();
 	//Filling memory from data segment
 	Memory();
 	void storeByte(char);

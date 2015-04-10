@@ -1,7 +1,7 @@
 #include "Memory.h"
 
 #include <iostream>
-
+#include <fstream>
 #include <cstring>
 
 using namespace std;
@@ -39,10 +39,7 @@ void Memory::storeByte(unsigned int addr, char val)
 void Memory::storeHalf(unsigned int addr, short val)
 {
     if (addr%2!=0)
-    {
     cout<<"Error";
-    TERMINATE=true;
-    }
     else
     {
     addr -= 0x10010000;
@@ -53,11 +50,8 @@ void Memory::storeHalf(unsigned int addr, short val)
 
 void Memory::storeWord(unsigned int addr, int val)
 {
-     if (adrr%4!=0)
-     {
+     if (addr%4!=0)
     cout<<"Error";
-    TERMINATE=true; 
-     }
     else
     {
     addr -= 0x10010000;
@@ -108,8 +102,14 @@ void Memory::MemoryArray(string path)
     else
     {
         cerr<<"ERROR in opening memory file\n";
-        TERMINATE=true;
     }
 }
 
+void Memory::memoryDump()
+{
+	ofstream output(memoryDumpFile.c_str());
+	for (int i = 0; i < 4096; i++)
+		output << memory[i];
+	output.close();
+}
 

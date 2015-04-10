@@ -1,4 +1,3 @@
-#include "Simulator.h"
 #include "GLOBALS.h"
 
 #include <string>
@@ -61,7 +60,6 @@ private:
 	void setBranchInstruction(string, int &);
 	void setMemoryInstruction(string, int &);
 	void setNormalIFormat(string, int &);
-	void run();
 	int hexaToDecimal(const string &, int);
 };
 

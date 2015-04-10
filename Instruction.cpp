@@ -1,12 +1,10 @@
 #include "Instruction.h"
-#include "simulator.h"
 #include <string>
 #include <stack>
 #include <cmath>
 #include <iostream>
 
 using namespace std;
-Simulator simulator; 
 
 Instruction::Instruction()
 {
@@ -19,7 +17,7 @@ void Instruction::assemble(string assemblyInstruction)
     int idx = 0;
     while (!isalpha(assemblyInstruction[idx]))
         idx++;
-    while (assemblyInstruction[idx] != ' ')
+    while (assemblyInstruction[idx] != ' ' && idx < assemblyInstruction.length())
     {
         instruction += tolower(assemblyInstruction[idx]);
         idx++;
@@ -393,9 +391,9 @@ void Instruction::setJFormat(string instruction, int & idx)
         temp += assemblyInstruction[idx];
         idx++;
     }
-    address = hexaToDecimal(temp, 8);
+    address = ((hexaToDecimal(temp, 8) & 0x0fffffff) >> 2);
     binaryInstruction += toBinary(opcode, 6, true);
-    binaryInstruction += toBinary((address & 268435455) >> 2, 26, true);
+    binaryInstruction += toBinary(address, 26, true);
 }
 
 void Instruction::setRFormat(string instruction, int & idx)
@@ -661,7 +659,7 @@ void Instruction::setNormalIFormat(string instruction, int & idx)
         temp += tolower(assemblyInstruction[idx]);
         idx++;
     }
-	signedImm = atoi(temp.c_str());
+	signedImm = hexaToDecimal(temp, 4);
 	imm = signedImm & 0x0000ffff;
 }
 
@@ -725,121 +723,6 @@ string Instruction::getBinaryInstruction() const
     return binaryInstruction;
 }
 
-void Instruction::run()
-{
-    if (opcode == 0)
-    {
-        switch (func)
-        {
-            case 0x08:
-                simulator.jr(this);
-                break;
-            case 0x20:
-                simulator.add(this);
-                break;
-            case 0x21:
-                simulator.addu(this);
-                break;
-            case 0x22:
-                simulator.sub(this);
-                break;
-            case 0x2A:
-                simulator.slt(this);
-                break;
-            case 0x00:
-                simulator.sll(this);
-                break;
-            case 0x02:
-                simulator.srl(this);
-                break;
-            case 0x24:
-                simulator.anding(this);
-                break;
-            case 0x25:
-                simulator.oring(this);
-                break;
-            case 0x26:
-                simulator.xoring(this);
-                break;
-            case 0x0C:
-                simulator.syscall(this);
-                break;
-            default:
-                cout<<"error";
-        }
-    }
-    else if (opcode != 0 && opcode != 2 && opcode != 3)
-    {
-        switch (opcode)
-        {
-            case 0x08:
-                simulator.addi(this);
-                break;
-            case 0x09:
-                simulator.addiu(this);
-                break;
-            case 0x0C:
-                simulator.andi(this);
-                break;
-            case 0x23:
-                simulator.lw(this);
-                break;
-            case 0x2B:
-                simulator.sw(this);
-                break;
-            case 0x20:
-                simulator.lb(this);
-                break;
-            case 0x28:
-                simulator.sb(this);
-                break;
-            case 0x21:
-                simulator.lh(this);
-                break;
-            case 0x29:
-                simulator.sh(this);
-                break;
-            case 0x0A:
-                simulator.slti(this);
-                break;
-            case 0x0D:
-                simulator.ori(this);
-                break;
-            case 0x0E:
-                simulator.xori(this);
-                break;
-            case 0x0F:
-                simulator.lui(this);
-                break;
-            case 0x04:
-                simulator.beq(this);
-                break;
-            case 0x05:
-                simulator.bne(this);
-                break;
-            default:
-                  cout<<"error";
-                break;
-        }
-    }
-    else if (opcode == 2 || opcode == 3)
-    {
-        switch (opcode) 
-        {
-            case 0x02:
-                simulator.j(this);
-                break;
-            case 0x03:
-                simulator.jal(this);
-                break;
-            default:
-                cout<<"error";
-                break;
-        }
-    }
-                
-}
-
 int Instruction::hexaToDecimal(const string & hexa, int n)
 {
 	if (hexa.length() > 2)
@@ -862,8 +745,20 @@ int Instruction::hexaToDecimal(const string & hexa, int n)
 			return ans;
 		}
 		else
-			return atoi(hexa.c_str());
+		{
+			int y = atoi(hexa.c_str());
+			int z;
+			z = (y << (n * 4));
+			z = (z >> (n * 4));
+			return z;
+		}
 	}
 	else
-		return atoi(hexa.c_str());
+	{
+		int y = atoi(hexa.c_str());
+		int z;
+		z = (y << (n * 4));
+		z = (z >> (n * 4));
+		return z;
+	}
 }

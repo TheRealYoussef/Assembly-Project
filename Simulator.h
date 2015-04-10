@@ -1,12 +1,14 @@
-#ifndef __Project_Assembly_1__Simulator__
-#define __Project_Assembly_1__Simulator__
-
-#include <iostream>
-#include <vector>
 #include "CPU.h"
 #include "Memory.h"
 #include "Instruction.h"
 #include "GLOBALS.H"
+
+#include <iostream>
+#include <vector>
+#include <fstream>
+
+#ifndef SIMULATOR_H
+#define SIMULATOR_H
 
 class Simulator
 {
@@ -47,8 +49,9 @@ public:
     void jal(Instruction*);
     void lui(Instruction*);
     void syscall(Instruction*);
+	void run(Instruction *);
     void simulate();
-    void displayRegister()
+	void displayRegister(string);
 };
 
-#endif /* defined(__Project_Assembly_1__Simulator__) */
+#endif

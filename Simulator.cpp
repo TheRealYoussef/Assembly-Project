@@ -177,51 +177,162 @@ void Simulator::lui(Instruction* instruction)
 {
     //R[rt] = {imm, 16’b0}
     cpu.registers[instruction->getRt()]=instruction->getImm()<<16;
-    
-    
 }
+
 void Simulator::syscall(Instruction* instruction)
 {
-    int address = cpu.registers[4];
-    char t;
-    
-   switch (cpu.registers[2])
-    {
-    //print integer
-        case 1:
-        cout<< cpu.registers[4];
-            break;
-    // print character
-        case 11:
-        cout<<char(cpu.registers[4] & 0xff);
-            break;
-    
-    //print string
-        case 4:
-    while((t = memory.loadByte(address) != 0))
-        {
-            cout << t;
-            address++;
-    
-        }
-            break;
-            //terminate execution
-        case 10:
-        globals.TERMINATE=true;
-            break;
+	int address = cpu.registers[4];
+	char t;
+	switch (cpu.registers[2])
+	{
+		//print integer
+		case 1:
+			cout << cpu.registers[4];
+			break;
+		// print character
+		case 11:
+			cout << char(cpu.registers[4] & 0xff);
+			break;
+		//print string
+		case 4:
+			while((t = memory.loadByte(address)) != 0)
+			{
+				cout << t;
+				address++;
+			}
+			break;
+		//terminate execution
+		case 10:
+			TERMINATE = true;
+			break;
+	}
 }
+
+void Simulator::run(Instruction *instruction)
+{
+	if (instruction->getOpcode() == 0)
+	{
+		switch (instruction->getFunc())
+		{
+		case 0x08:
+			jr(instruction);
+			break;
+		case 0x20:
+			add(instruction);
+			break;
+		case 0x21:
+			addu(instruction);
+			break;
+		case 0x22:
+			sub(instruction);
+			break;
+		case 0x2A:
+			slt(instruction);
+			break;
+		case 0x00:
+			sll(instruction);
+			break;
+		case 0x02:
+			srl(instruction);
+			break;
+		case 0x24:
+			anding(instruction);
+			break;
+		case 0x25:
+			oring(instruction);
+			break;
+		case 0x26:
+			xoring(instruction);
+			break;
+		case 0x0C:
+			syscall(instruction);
+			break;
+		default:
+			cerr << "Error\n";
+		}
+	}
+	else if (instruction->getOpcode() != 0 && instruction->getOpcode() != 2 && instruction->getOpcode() != 3)
+	{
+		switch (instruction->getOpcode())
+		{
+		case 0x08:
+			addi(instruction);
+			break;
+		case 0x09:
+			addiu(instruction);
+			break;
+		case 0x0C:
+			andi(instruction);
+			break;
+		case 0x23:
+			lw(instruction);
+			break;
+		case 0x2B:
+			sw(instruction);
+			break;
+		case 0x20:
+			lb(instruction);
+			break;
+		case 0x28:
+			sb(instruction);
+			break;
+		case 0x21:
+			lh(instruction);
+			break;
+		case 0x29:
+			sh(instruction);
+			break;
+		case 0x0A:
+			slti(instruction);
+			break;
+		case 0x0D:
+			ori(instruction);
+			break;
+		case 0x0E:
+			xori(instruction);
+			break;
+		case 0x0F:
+			lui(instruction);
+			break;
+		case 0x04:
+			beq(instruction);
+			break;
+		case 0x05:
+			bne(instruction);
+			break;
+		default:
+			cerr << "Error\n";
+			break;
+		}
+	}
+	else if (instruction->getOpcode() == 2 || instruction->getOpcode() == 3)
+	{
+		switch (instruction->getOpcode())
+		{
+		case 0x02:
+			j(instruction);
+			break;
+		case 0x03:
+			jal(instruction);
+			break;
+		default:
+			cerr << "Error\n";
+			break;
+		}
+	}
+
 }
 
 void Simulator::simulate()
 {
     int i;
     do{
-        i=(cpu.programCounter-0x04000000)/4;
+        i=(cpu.programCounter-0x00400000)/4;
         cpu.programCounter+=4;
         if (i>=program.size())
             break;
-        program[i].run();
-    } while(!globals.TERMINATE);
+		run(&program[i]);
+    } while(!TERMINATE);
 }
 
 void Simulator::initializeName()
@@ -328,9 +439,9 @@ void Simulator::initializeName()
     }
 }
 
-void Simulator:: displayRegister(string path)
+void Simulator::displayRegister(string path)
 {
-    outfile.open(path.c_str())
+	outfile.open(path.c_str());
     if(outfile.is_open())
     {
         outfile<<"Name"<<setw(30)<<"Number"<<setw(30)<<"Value"<<endl;
@@ -338,5 +449,5 @@ void Simulator:: displayRegister(string path)
             outfile<<registerName[i]<<setw(30)<<i<<setw(30)<<cpu.registers[i]<<endl;
     }
     else
-        cerr<<"Error in opening output file\n”;
-        }
+        cerr<<"Error in opening output file\n";
+}
