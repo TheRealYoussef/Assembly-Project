@@ -13,7 +13,7 @@ public:
     void display();
     int getOpcode(int) const;
     int getSImm(int);
-    Simulator simulator;
+    void simulatorData( vector<Instruction>&);
 private:
     
     char c;

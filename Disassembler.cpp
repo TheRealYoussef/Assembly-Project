@@ -63,8 +63,7 @@ void Disassembler::getData(){
         
         x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,printLi); // calling the disassebling process
         inst.push_back(x);
-        simulator.program.push_back(x);
-        
+               
     }
     
 }
@@ -132,4 +131,10 @@ int Disassembler:: getSImm(int i){
     int imm = (instfile[i] & 0xFFFF);
     
     return ((imm & 0x8000) ? (0xFFFF0000 | imm) : imm);
+}
+
+void Disassembler:: simulatorData( vector<Instruction>& x){
+    
+    x = inst;
+    
 }

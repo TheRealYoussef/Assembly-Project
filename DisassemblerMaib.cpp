@@ -12,11 +12,15 @@
 
 int main(int argc, const char * argv[]) {
     
-        Simulator simulator;
-  simulator.memory.MemoryArray("/Users/bahermursi/Desktop/Memory Dump.txt");
-    Disassembler disassembler("/Users/bahermursi/Desktop/Text Dump.txt");
+    vector<Instruction> sim;
+    Simulator simulator;
+    simulator.memory.MemoryArray("/Users/bahermursi/Desktop/Memory Dump.txt");
+    Disassembler disassembler("/Users/bahermursi/Desktop/texttest.txt");
     disassembler.display();
+    disassembler.simulatorData(sim);
+    simulator.program = sim;
     simulator.simulate();
+    cout << endl;
     
     
     return 0;

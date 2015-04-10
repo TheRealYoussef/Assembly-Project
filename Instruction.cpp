@@ -53,6 +53,7 @@ void Instruction::dissassemble(unsigned int binaryInstruction, int trd, int trt,
     {
         address = (binaryInstruction & 0x3FFFFFF);
     }
+    
     int temp_rd=trd;
     int temp_rt=trt;
     bool psubi=subi,pLi=li;
