@@ -13,8 +13,9 @@ public:
     void display();
     int getOpcode(int) const;
     int getSImm(int);
-private:
     Simulator simulator;
+private:
+    
     char c;
     unsigned int instWord;
     ifstream inFile;

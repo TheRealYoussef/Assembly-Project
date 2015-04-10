@@ -57,7 +57,8 @@ void Disassembler::getData(){
         printSubi=(isAddi && isSub);
         
         
-        x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,printLi); // calling the disassebling process
+       x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,printLi); // calling the disassebling process
+        inst.push_back(x);
         simulator.program.push_back(x);
         
     }
@@ -87,7 +88,7 @@ void Disassembler::display(){
             if ( (instfile[i] >> 26) == 0x04 || (instfile[i] >> 26) == 0x05 )
                 labels[branchIndex] = "label_"+ to_string(counter++) + ": ";
         
-        
+     
     }
     
     for (int i = 0 ; i < instfile.size() ; i++) {
