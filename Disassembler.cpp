@@ -47,9 +47,9 @@ void Disassembler::getData(){
         isAddi  = (instfile[i] >> 26 == 0x08);
         
         if (i<instfile.size()-1){
-        isSub   = (instfile[i+1] >>26 == 0);
-        temp_rd = (instfile[i+1] >> 11) & 0x1f;
-        temp_rt = (instfile[i+1] >> 21) & 0x1f;
+            isSub   = (instfile[i+1] >>26 == 0);
+            temp_rd = (instfile[i+1] >> 11) & 0x1f;
+            temp_rt = (instfile[i+1] >> 21) & 0x1f;
             pLi = ((instfile[i] >> 26 == 0x0F) && instfile[i+1] >> 26 == 0x0D);
         }
         else
@@ -64,66 +64,73 @@ void Disassembler::getData(){
         
         x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,printLi); // calling the disassebling process
         inst.push_back(x);
-               
+        
     }
     
 }
 
-void Disassembler::display(){
-    //set vector label to the size of the instructions
-    labels.resize(instfile.size());
+void Disassembler::display(string path){
     
-    int counter =0; //used in assigning numbers to the labels
-    
-    for (int i=0; i < instfile.size();i++)
-    {
-        address =  (instfile[i] & 0x3FFFFFF) << 2; // extracting the address
-        jumpIndex= (address - 0x00400000)/4; //the index of the label
-        branchIndex = i + 1 + getSImm(i);
+    ofstream outfile;
+    outfile.open(path.c_str());
+    if (outfile.is_open()) {
+        //set vector label to the size of the instructions
+        labels.resize(instfile.size());
         
-        //if j or jal, store the labels based on it's address
-        if ( (instfile[i] >> 26) == 2 || (instfile[i] >> 26) == 3 )
+        int counter =0; //used in assigning numbers to the labels
+        
+        for (int i=0; i < instfile.size();i++)
         {
-            //check if the inserted label wasn't inserted by the branch instruction, to avoid duplication
-            if (labels[jumpIndex] == "")
-                labels[jumpIndex]= "label_"+ to_string(counter++) + ": ";
-        }
-        else
-            if ( (instfile[i] >> 26) == 0x04 || (instfile[i] >> 26) == 0x05 )
-                labels[branchIndex] = "label_"+ to_string(counter++) + ": ";
-        
-        
-    }
-    
-    for (int i = 0 ; i < instfile.size() ; i++) {
-        
-        //Printing labels
-        if (labels[i] !="" )
-            cout <<endl<<labels[i] << "          " << endl;
-        
-        if (inst[i].getAssemblyInstruction() !="")
-        {
-            // printing j and jal with label
-            if (inst[i].getOpcode() == 2 || inst[i].getOpcode() == 3)
+            address =  (instfile[i] & 0x3FFFFFF) << 2; // extracting the address
+            jumpIndex= (address - 0x00400000)/4; //the index of the label
+            branchIndex = i + 1 + getSImm(i);
+            
+            //if j or jal, store the labels based on it's address
+            if ( (instfile[i] >> 26) == 2 || (instfile[i] >> 26) == 3 )
             {
-                jumpIndex = ( (inst[i].getAddress()<<2) - 0x00400000) / 4;
-                long len =labels[jumpIndex].length()-1;
-                string jString =labels[jumpIndex];
-                cout << "          " << inst[i].getAssemblyInstruction() << jString.erase(abs(len - 1)) <<endl << endl; //erase is used to erase the ":"
+                //check if the inserted label wasn't inserted by the branch instruction, to avoid duplication
+                if (labels[jumpIndex] == "")
+                    labels[jumpIndex]= "label_"+ to_string(counter++) + ": ";
             }
             else
-                if ( inst[i].getOpcode() == 0x04 || inst[i].getOpcode() == 0x05 )
+                if ( (instfile[i] >> 26) == 0x04 || (instfile[i] >> 26) == 0x05 )
+                    labels[branchIndex] = "label_"+ to_string(counter++) + ": ";
+            
+            
+        }
+        
+        for (int i = 0 ; i < instfile.size() ; i++) {
+            
+            //Printing labels
+            if (labels[i] !="" )
+                outfile <<endl<<labels[i] << "          " << endl;
+            
+            if (inst[i].getAssemblyInstruction() !="")
+            {
+                // printing j and jal with label
+                if (inst[i].getOpcode() == 2 || inst[i].getOpcode() == 3)
                 {
-                    //printing beq and bne with label
-                    branchIndex = i + 1+ getSImm(i);
-                    long len1 = labels[branchIndex].length()-1;
-                    string brString = labels[branchIndex];
-                    cout << "          " << inst[i].getAssemblyInstruction() << brString.erase(len1 - 1) << endl;
+                    jumpIndex = ( (inst[i].getAddress()<<2) - 0x00400000) / 4;
+                    long len =labels[jumpIndex].length()-1;
+                    string jString =labels[jumpIndex];
+                    outfile << "          " << inst[i].getAssemblyInstruction() << jString.erase(abs(len - 1)) <<endl << endl; //erase is used to erase the ":"
                 }
                 else
-                    cout <<"          "<< inst[i].getAssemblyInstruction() << endl;
+                    if ( inst[i].getOpcode() == 0x04 || inst[i].getOpcode() == 0x05 )
+                    {
+                        //printing beq and bne with label
+                        branchIndex = i + 1+ getSImm(i);
+                        long len1 = labels[branchIndex].length()-1;
+                        string brString = labels[branchIndex];
+                        outfile << "          " << inst[i].getAssemblyInstruction() << brString.erase(len1 - 1) << endl;
+                    }
+                    else
+                        outfile <<"          "<< inst[i].getAssemblyInstruction() << endl;
+            }
         }
     }
+    else
+        cout <<" Error in opening disassembler output file\n";
 }
 
 

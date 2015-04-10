@@ -11,12 +11,12 @@
 #include "Simulator.h"
 
 int main(int argc, const char * argv[]) {
-    
+    string path ="/Users/bahermursi/Desktop/proj231/proj231/File";
     vector<Instruction> sim;
     Simulator simulator;
     simulator.memory.MemoryArray("/Users/bahermursi/Desktop/Memory Dump.txt");
     Disassembler disassembler("/Users/bahermursi/Desktop/texttest.txt");
-    disassembler.display();
+    disassembler.display(path);
     disassembler.simulatorData(sim);
     simulator.program = sim;
     simulator.simulate();

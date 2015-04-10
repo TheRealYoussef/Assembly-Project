@@ -10,7 +10,7 @@ class Disassembler{
 public:
     Disassembler(string);
     void getData();
-    void display();
+    void display(string);
     int getOpcode(int) const;
     int getSImm(int);
     void simulatorData( vector<Instruction>&);
