@@ -9,8 +9,10 @@
 
 using namespace std;
 
-AssemblyParser::AssemblyParser(const string & file, Memory & memory, vector<Instruction> & inst)
+AssemblyParser::AssemblyParser(const string & file, const string & textDumpFile, const string & memoryDumpFile, Memory & memory, vector<Instruction> & inst)
 {
+	this->textDumpFile = textDumpFile;
+	this->memoryDumpFile = memoryDumpFile;
 	//No need for comments, just parsing
 	getDataLabels(file);
 	parseData(file, memory);
@@ -296,15 +298,15 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 	unsigned int textAddress = 0x00400000;
 	ifstream input;
 	input.open(file.c_str());
-	ofstream output(textDumpFile.c_str());
+	ofstream output(textDumpFile.c_str(), std::ios_base::out | std::ios_base::binary);
 	string str;
 	input >> str;
 	while (str != ".text" && !input.eof())
 		input >> str;
 	input >> str;
 	char c;
-	vector<char>characters(4);
-	while ((!input.eof() || str == "syscall") && str != ".data")
+	vector<char>characters;
+	while (!input.eof() && str != ".data")
 	{
 		if (str[0] == '#')
 		{
@@ -319,7 +321,7 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 		{
 			string instruction = "";
 			instruction += str;
-			if (str != "beq" && str != "bne" && str != "j" && str != "jal")
+			if (str != "beq" && str != "bne" && str != "j" && str != "jal" && str != "lui")
 			{
 				input.get(c);
 				while (c != '\n' && c != '#' && !input.eof())
@@ -329,6 +331,42 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 				}
 				while (c != '\n' && !input.eof())
 					input.get(c);
+			}
+			else if (str == "lui")
+			{
+				input.get(c);
+				while (c != ',')
+				{
+					instruction += c;
+					input.get(c);
+				}
+				while (!isdigit(c) && !isalpha(c) && c != '-')
+				{
+					instruction += c;
+					input.get(c);
+				}
+				if (isalpha(c))
+				{
+					string label = "";
+					while (c != '\n' && c != '#' && c != ' ' && !input.eof())
+					{
+						label += c;
+						input.get(c);
+					}
+					while (c != '\n' && !input.eof())
+						input.get(c);
+					instruction += to_string(labels[label]);
+				}
+				else
+				{
+					while (c != '\n' && c != '#' && !input.eof() && c != ' ')
+					{
+						instruction += c;
+						input.get(c);
+					}
+					while (c != '\n' && !input.eof())
+						input.get(c);
+				}
 			}
 			else if (str == "j" || str == "jal")
 			{
@@ -352,7 +390,7 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 				}
 				else
 				{
-					while (c != '\n' && c != '#' && !input.eof())
+					while (c != '\n' && c != '#' && !input.eof() && c != ' ')
 					{
 						instruction += c;
 						input.get(c);
@@ -364,21 +402,28 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 			else 
 			{
 				input.get(c);
-				while (c != ',')
+				while (c != '$')
 				{
 					instruction += c;
 					input.get(c);
 				}
 				instruction += c;
 				input.get(c);
-				while (c != ',')
+				while (c != '$')
 				{
 					instruction += c;
 					input.get(c);
 				}
-				instruction += c;
-				while (!isalpha(c) && !isdigit(c))
+				while (c != ',' && c != ' ')
+				{
+					instruction += c;
 					input.get(c);
+				}
+				while (!isalpha(c) && !isdigit(c))
+				{
+					instruction += c;
+					input.get(c);
+				}
 				if (isdigit(c))
 				{
 					string n = "";
@@ -416,9 +461,9 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 			Instruction instr;
 			instr.assemble(instruction);
 			inst.push_back(instr);
-			characters = toChar(instr.getBinaryInstruction());
+			toChar(instr.getBinaryInstruction(), characters);
 			for (int i = 3; i >= 0; i--)
-				output << characters[i];
+				output << characters[i];;
 		}
 		else if (str[str.length() - 1] == ':')
 		{
@@ -464,9 +509,9 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 					Instruction instr;
 					instr.assemble(instruction);
 					inst.push_back(instr);
-					characters = toChar(instr.getBinaryInstruction());
+					toChar(instr.getBinaryInstruction(), characters);
 					for (int i = 3; i >= 0; i--)
-						output << characters[i];
+						output << characters[i];;
 					string instruction2 = "ori ";
 					instruction2 += reg;
 					instruction2 += ", $1, ";
@@ -474,9 +519,9 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 					Instruction instr2;
 					instr2.assemble(instruction2);
 					inst.push_back(instr2);
-					characters = toChar(instr2.getBinaryInstruction());
+					toChar(instr2.getBinaryInstruction(), characters);
 					for (int i = 3; i >= 0; i--)
-						output << characters[i];
+						output << characters[i];;
 					textAddress += 8;
 				}
 				else
@@ -494,9 +539,9 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 					Instruction instr;
 					instr.assemble(instruction);
 					inst.push_back(instr);
-					characters = toChar(instr.getBinaryInstruction());
+					toChar(instr.getBinaryInstruction(), characters);
 					for (int i = 3; i >= 0; i--)
-						output << characters[i];
+						output << characters[i];;
 					string instruction2 = "ori ";
 					instruction2 += reg;
 					instruction2 += ", $1, ";
@@ -504,9 +549,9 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 					Instruction instr2;
 					instr2.assemble(instruction2);
 					inst.push_back(instr2);
-					characters = toChar(instr2.getBinaryInstruction());
+					toChar(instr2.getBinaryInstruction(), characters);
 					for (int i = 3; i >= 0; i--)
-						output << characters[i];
+						output << characters[i];;
 					textAddress += 8;
 				}
 			}
@@ -535,9 +580,9 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 				Instruction instr;
 				instr.assemble(instruction);
 				inst.push_back(instr);
-				characters = toChar(instr.getBinaryInstruction());
+				toChar(instr.getBinaryInstruction(), characters);
 				for (int i = 3; i >= 0; i--)
-					output << characters[i];
+					output << characters[i];;
 				textAddress += 4;
 			}
 			else if (str == "subi")
@@ -558,7 +603,7 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 					reg2 += c;
 					input.get(c);
 				}
-				while (!isdigit(c))
+				while (!isdigit(c) && c != '-')
 					input.get(c);
 				while (c != ' ' && c != '#' && c != '\n' && !input.eof())
 				{
@@ -570,9 +615,9 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 				Instruction instr1;
 				instr1.assemble(instruction1);
 				inst.push_back(instr1);
-				characters = toChar(instr1.getBinaryInstruction());
+				toChar(instr1.getBinaryInstruction(), characters);
 				for (int i = 3; i >= 0; i--)
-					output << characters[i];
+					output << characters[i];;
 				string instruction2 = "sub ";
 				instruction2 += reg1;
 				instruction2 += ", ";
@@ -580,18 +625,27 @@ void AssemblyParser::parseText(const string & file, vector<Instruction> & inst)
 				instruction2 += ", $1";
 				Instruction instr2;
 				instr2.assemble(instruction2);
-				inst.push_back(instr2);
-				characters = toChar(instr2.getBinaryInstruction());
+				inst.push_back(instr2); 
+				toChar(instr2.getBinaryInstruction(), characters);
 				for (int i = 3; i >= 0; i--)
-					output << characters[i];
+					output << characters[i];;
 				textAddress += 4;
 			}
 			while (c != '\n' && !input.eof())
 				input.get(c);
 		}
-		if (input.eof())
-			break;
 		input >> str;
+		if (str == "syscall")
+		{
+			textAddress += 4;
+			Instruction instr;
+			instr.assemble(str);
+			inst.push_back(instr);
+			toChar(instr.getBinaryInstruction(), characters);
+			for (int i = 3; i >= 0; i--)
+				output << characters[i];;
+			input >> str;
+		}
 	}
 	output.close();
 	input.close();
@@ -865,7 +919,7 @@ void AssemblyParser::parseData(const string & file, Memory & memory)
 		}
 	}
 	input.close();
-	memory.memoryDump();
+	memory.memoryDump(memoryDumpFile);
 }
 
 int AssemblyParser::wordHexaToDecimal(const string & hexa)
@@ -925,18 +979,18 @@ char AssemblyParser::byteHexaToDecimal(const string & hexa)
 	return ans;
 }
 
-vector<char> AssemblyParser::toChar(const string & s)
+void AssemblyParser::toChar(string s, vector<char> & characters) const
 {
 	string chars[4];
-	vector<char>characters(4);
+	characters.clear();
+	characters.resize(4);
 	for (int i = 0; i < 4; i++)
 		chars[i] = s.substr(i * 8, 8);
 	for (int i = 0; i < 4; i++)
 	{
-		unsigned int ans = 0;
+		unsigned char ans = 0;
 		for (int j = 0; j < 8; j++)
 			ans = (ans << 1) + (chars[i][j] - '0');
-		characters[i] = char(ans);
+		characters[i] = ans;
 	}
-	return characters;
 }

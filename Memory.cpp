@@ -97,7 +97,7 @@ void Memory::MemoryArray(string path)
 {
     int i=0;
     ifstream in;
-    in.open(path.c_str());
+    in.open(path.c_str(), ios_base::in | ios_base::binary);
     if(in.is_open())
     {
         while (!in.eof() && i<8192 )
@@ -113,9 +113,9 @@ void Memory::MemoryArray(string path)
     }
 }
 
-void Memory::memoryDump()
+void Memory::memoryDump(const string & memoryDumpFile)
 {
-	ofstream output(memoryDumpFile.c_str());
+	ofstream output(memoryDumpFile.c_str(), ios_base::out | ios_base::binary);
 	for (int i = 0; i < 8192; i++)
 		output << memory[i];
 	output.close();

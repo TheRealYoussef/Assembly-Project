@@ -18,7 +18,7 @@ class AssemblyParser
 
 private:
 
-	const string textDumpFile = "Text Dump.txt";
+	string textDumpFile, memoryDumpFile;
 
 	map<string, unsigned int>labels;
 
@@ -38,11 +38,11 @@ private:
 
 	char byteHexaToDecimal(const string &);
 
-	vector<char> toChar(const string &);
+	void toChar(string, vector<char> &) const;
 
 public:
 
-	AssemblyParser(const string &, Memory &, vector<Instruction> &);
+	AssemblyParser(const string &, const string &, const string &, Memory &, vector<Instruction> &);
 
 };
 
