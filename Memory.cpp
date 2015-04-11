@@ -41,7 +41,7 @@ void Memory::storeHalf(unsigned int addr, short val)
 {
 	if (addr % 2 != 0)
 	{
-		cout << "Error";
+		cout << "Error in memory store half\n";
 		TERMINATE = true;
 	}
 	else
@@ -56,7 +56,7 @@ void Memory::storeWord(unsigned int addr, int val)
 {
 	if (addr % 4 != 0)
 	{
-		cout << "Error";
+		cout << "rror in memory store word\n";
 		TERMINATE = true;
 	}
 	else
@@ -108,7 +108,7 @@ void Memory::MemoryArray(string path)
     }
     else
     {
-        cerr<<"ERROR in opening memory file\n";
+        cerr<<"Error in opening memory file\n";
 		TERMINATE = true;
     }
 }

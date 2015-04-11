@@ -26,13 +26,9 @@ private:
     unsigned int address;
     int jumpIndex;
     int branchIndex;
-    int brOffset=0;
     Instruction x;
-    unsigned int pc=0x00400000;
     int temp_rd;
     int temp_rt;
-    bool isLui;
-    bool isOri;
     bool isAddi;
     bool isSub;
     bool isSubu;

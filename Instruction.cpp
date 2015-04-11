@@ -133,7 +133,7 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
             case 0x08:
                 if (rs == 0 && subi == false)
                     assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
-                else //CHeck on different test cases
+                else //Check on different test cases
                     if (subi == 1) {
                         assemblyInstruction ="";
                     }
