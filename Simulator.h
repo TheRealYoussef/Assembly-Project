@@ -17,7 +17,7 @@ public:
     Memory memory;
     string registerName[32];
     ofstream outfile;
-    void initializeName();
+    string initializeName(int);
     vector <Instruction> program;
     Simulator();
     ~Simulator();

@@ -335,118 +335,119 @@ void Simulator::simulate()
     } while(!TERMINATE);
 }
 
-void Simulator::initializeName()
+string Simulator::initializeName(int i)
 {
-    int i=0;
+   
     switch(i)
     {
         case 0:
-            registerName[i]="$zero";
+            registerName[0]="$zero";
             break;
         case 1:
-            registerName[i]="$at";
+            registerName[1]="$at";
             break;
         case 2:
-            registerName[i]="$v0";
+            registerName[2]="$v0";
             break;
         case 3:
-            registerName[i]="$v1";
+            registerName[3]="$v1";
             break;
         case 4:
-            registerName[i]="$a0";
+            registerName[4]="$a0";
             break;
         case 5:
-            registerName[i]="$a1";
+            registerName[5]="$a1";
             break;
         case 6:
-            registerName[i]="$a2";
+            registerName[6]="$a2";
             break;
         case 7:
-            registerName[i]="$a3";
+            registerName[7]="$a3";
             break;
         case 8:
-            registerName[i]="$t0";
+            registerName[8]="$t0";
             break;
         case 9:
-            registerName[i]="$t1";
+            registerName[9]="$t1";
             break;
         case 10:
-            registerName[i]="$t2";
+            registerName[10]="$t2";
             break;
         case 11:
-            registerName[i]="$t3";
+            registerName[11]="$t3";
             break;
         case 12:
-            registerName[i]="$t4";
+            registerName[12]="$t4";
             break;
         case 13:
-            registerName[i]="$t5";
+            registerName[13]="$t5";
             break;
         case 14:
-            registerName[i]="$t6";
+            registerName[14]="$t6";
             break;
         case 15:
-            registerName[i]="$t7";
+            registerName[15]="$t7";
             break;
         case 16:
-            registerName[i]="$s0";
+            registerName[16]="$s0";
             break;
         case 17:
-            registerName[i]="$s1";
+            registerName[17]="$s1";
             break;
         case 18:
-            registerName[i]="$s2";
+            registerName[18]="$s2";
             break;
         case 19:
-            registerName[i]="$s3";
+            registerName[19]="$s3";
             break;
         case 20:
-            registerName[i]="$s4";
+            registerName[20]="$s4";
             break;
         case 21:
-            registerName[i]="$s5";
+            registerName[21]="$s5";
             break;
         case 22:
-            registerName[i]="$s6";
+            registerName[22]="$s6";
             break;
         case 23:
-            registerName[i]="$s7";
+            registerName[23]="$s7";
             break;
         case 24:
-            registerName[i]="$t8";
+            registerName[24]="$t8";
             break;
         case 25:
-            registerName[i]="$t9";
+            registerName[25]="$t9";
             break;
         case 26:
-            registerName[i]="$k0";
+            registerName[26]="$k0";
             break;
         case 27:
-            registerName[i]="$k1";
+            registerName[27]="$k1";
             break;
         case 28:
-            registerName[i]="$gp";
+            registerName[28]="$gp";
             break;
         case 29:
-            registerName[i]="$sp";
+            registerName[29]="$sp";
             break;
         case 30:
-            registerName[i]="$fp";
+            registerName[30]="$fp";
             break;
         case 31:
-            registerName[i]="$ra";
+            registerName[31]="$ra";
             break;
     }
+    return registerName[i];
 }
 
 void Simulator::displayRegister(string path)
-{
+{string x;
 	outfile.open(path.c_str());
     if(outfile.is_open())
     {
-        outfile<<"Name"<<setw(30)<<"Number"<<setw(30)<<"Value"<<endl;
+        outfile<<"Name"<<setw(35)<<"Number"<<setw(35)<<"Value"<<endl;
         for(int i=0; i<32; i++)
-            outfile<<registerName[i]<<setw(30)<<i<<setw(30)<<cpu.registers[i]<<endl;
+            outfile<< initializeName(i)<<setw(35)<<i<<setw(35)<<cpu.registers[i]<<endl;
     }
     else
         cerr<<"Error in opening output file\n";
