@@ -100,19 +100,19 @@ int main(int argc, char *argv[])
 					textDumpFile = "TextDump.bin";
 					memoryDumpFile = "MemoryDump.bin";
 				}
-				if (!TERMINATE)
-				{
-					Simulator sim;
-					AssemblyParser ap(assemblyCodeFile, textDumpFile, memoryDumpFile, sim.memory, sim.program);
-					if (!TERMINATE)
-						sim.simulate();
-				}
 			}
 			else
 				cerr << "Invalid assembly code file path.\n";
 		}
 		else
 			cerr << "Invalid command.\n";
+		if (!TERMINATE)
+		{
+			Simulator sim;
+			AssemblyParser ap(assemblyCodeFile, textDumpFile, memoryDumpFile, sim.memory, sim.program);
+			if (!TERMINATE)
+				sim.simulate();
+		}
 	}
 	else
 		cerr << "Invalid command.\n";
