@@ -9,7 +9,7 @@ Disassembler::Disassembler(string x){
 }
 
 void Disassembler::getData(){
-    inFile.open(inFileName.c_str());
+    inFile.open(inFileName.c_str(), ios_base::in | ios_base::binary);
     
     // If the file is open (this will evaluate to false if the file could not be found)
     if(inFile.is_open())
