@@ -176,7 +176,7 @@ void Simulator::jal(Instruction* instruction)
 void Simulator::lui(Instruction* instruction)
 {
     //R[rt] = {imm, 16’b0}
-    cpu.registers[instruction->getRt()]=instruction->getImm()<<16;
+    cpu.registers[instruction->getRt()]=(instruction->getImm()<<16);
 }
 
 void Simulator::syscall(Instruction* instruction)

@@ -41,7 +41,7 @@ void Memory::storeHalf(unsigned int addr, short val)
 {
 	if (addr % 2 != 0)
 	{
-		cout << "Error in memory store half\n";
+		cout << "Error in memory store half.\n";
 		TERMINATE = true;
 	}
 	else
@@ -56,7 +56,7 @@ void Memory::storeWord(unsigned int addr, int val)
 {
 	if (addr % 4 != 0)
 	{
-		cout << "rror in memory store word\n";
+		cout << "Error in memory store word.\n";
 		TERMINATE = true;
 	}
 	else

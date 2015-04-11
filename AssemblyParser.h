@@ -18,19 +18,19 @@ class AssemblyParser
 
 private:
 
-	string textDumpFile, memoryDumpFile;
+	string assemblyFile, textDumpFile, memoryDumpFile;
 
 	map<string, unsigned int>labels;
 
-	void getDataLabels(const string &);
+	void getDataLabels();
 
-	void getTextLabels(const string &);
+	void getTextLabels();
 
 	bool isInstruction(const string &);
 
-	void parseData(const string &, Memory &);
+	void parseData(Memory &);
 
-	void parseText(const string &, vector<Instruction> &);
+	void parseText(vector<Instruction> &);
 
 	int wordHexaToDecimal(const string &);
 	
@@ -42,7 +42,7 @@ private:
 
 public:
 
-	AssemblyParser(const string &, const string &, const string &, Memory &, vector<Instruction> &);
+	AssemblyParser(const string & assemblyCodeFile, const string & textDumpFile, const string & memoryDumpFile, Memory & memory, vector<Instruction> & instructionVector);
 
 };
 
