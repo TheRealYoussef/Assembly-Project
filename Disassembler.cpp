@@ -47,7 +47,7 @@ void Disassembler::getData(){
         
         if (i<instfile.size()-1){
             isSub   = ((instfile[i] >>26 == 0) && ((instfile[i+1] & 0x3F) == 0x22)
-            &&(instfile[i-1]>> 26 == 0x08));
+                       &&(instfile[i-1]>> 26 == 0x08));
             isAddi = ((instfile[i+1] >> 26 == 0) && ((instfile[i+1] & 0x3F) == 0x22)) && (instfile[i] >> 26 == 0x08 );
             temp_rd = (instfile[i+1] >> 11) & 0x1f;
             temp_rt = (instfile[i+1] >> 21) & 0x1f;
@@ -115,7 +115,7 @@ void Disassembler::display(string path){
                     jumpIndex = ( (inst[i].getAddress()<<2) - 0x00400000) / 4;
                     long len =labels[jumpIndex].length()-1;
                     string jString =labels[jumpIndex];
-                    outfile << "          " << inst[i].getAssemblyInstruction() << jString.erase(abs(len - 1)) <<endl << endl; //erase is used to erase the ":"
+                    outfile <<endl<< "          " << inst[i].getAssemblyInstruction() << jString.erase(abs(len - 1)) <<endl << endl; //erase is used to erase the ":"
                 }
                 else
                     if ( inst[i].getOpcode() == 0x04 || inst[i].getOpcode() == 0x05 )
