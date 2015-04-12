@@ -1,14 +1,25 @@
-.data #necessary, endline is necessary, supports .word, .half, .byte, .space, .ascii, .asciiz, does NOT support special characters (such as \n, \r, \\, \", \', etc.)
+.data #necessary, endline is necessary, supports .word, .half, .byte, .space, .ascii, .asciiz, supports special characters (such as \n, \r, \\, \", \', etc.)
 .word 54, label , 0xfff103 ,  'b'#space between directive and the number/label/character after it is necessary
-someLabel: .byte 2,6, 3, 's', 0x4f #space between label and directive is necessary
-label: .asciiz "Some string" , "some other string", "yet another string"     #comment
+someLabel: .byte 2,6, 3, 's', 0x4f	, '\0'  ,  '\n' #space between label and directive is necessary
+label: .asciiz "Some string" , "some other \"string\"\n", "yet another string"     #comment
 .space 10
-label2: .half 63,0xffff  , 20
+
+label2: 
+		.half 63,0xffff  , 20
+
+#comment
+
 .text #necessary
+
 .globl main #not necessary
-	add $t0, $t1, $t2 #comment
-label3: li $s0, 5 #comment
-	la	 $s1, label
+
+#comment containing the words .data and .text no problem
+
+main:
+		add $t0, $t1, $t2 #comment
+label3: 		li $s0, 5 #comment
+	
+		la	 $s1, 	label
 	move $s5 , $s1
-	subi $t0  , $t1 , 8   #  comment
-	addi $t4, $t5, 0x3f4c
+		subi $t0  , $t1 , 8   #  comment
+			addi $t4, $t5, 0x3f4c

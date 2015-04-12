@@ -40,6 +40,8 @@ private:
 
 	void toChar(string, vector<char> &) const;
 
+	char specialCharacter(char) const;
+
 public:
 
 	AssemblyParser(const string & assemblyCodeFile, const string & textDumpFile, const string & memoryDumpFile, Memory & memory, vector<Instruction> & instructionVector);
