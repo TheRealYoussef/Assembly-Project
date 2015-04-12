@@ -101,7 +101,7 @@ void Disassembler::display(string path){
             
         }
         
-        outfile<<".txt"<<endl;
+        outfile<<".text"<<endl;
         for (int i = 0 ; i < instfile.size() ; i++) {
             
             //Printing labels
