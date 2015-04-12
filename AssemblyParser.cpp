@@ -29,7 +29,7 @@ void AssemblyParser::getDataLabels()
 	unsigned int dataAddress = 0x10010000;
 	string label;
 	ifstream input;
-	input.open(assemblyFile.c_str());
+	input.open(assemblyFile.c_str(), ios_base::in | ios_base::binary);
 	if (!input.fail())
 	{
 		input >> label;
@@ -264,7 +264,7 @@ void AssemblyParser::parseData(Memory & memory)
 {
 	string directive;
 	ifstream input;
-	input.open(assemblyFile.c_str());
+	input.open(assemblyFile.c_str(), ios_base::in | ios_base::binary);
 	if (!input.fail())
 	{
 		input >> directive;
@@ -584,7 +584,7 @@ void AssemblyParser::getTextLabels()
 {
 	unsigned int textAddress = 0x00400000;
 	string instruction;
-	ifstream input(assemblyFile.c_str());
+	ifstream input(assemblyFile.c_str(), ios_base::in | ios_base::binary);
 	if (!input.fail())
 	{
 		input >> instruction;
@@ -676,7 +676,7 @@ void AssemblyParser::getTextLabels()
 void AssemblyParser::parseText(vector<Instruction> & inst)
 {
 	unsigned int textAddress = 0x00400000;
-	ifstream input(assemblyFile.c_str());
+	ifstream input(assemblyFile.c_str(), ios_base::in | ios_base::binary);
 	ofstream output(textDumpFile.c_str(), std::ios_base::out | std::ios_base::binary);
 	if (!input.fail() && !output.fail())
 	{
