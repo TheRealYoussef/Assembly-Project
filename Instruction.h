@@ -13,7 +13,7 @@ class Instruction
 public:
     Instruction();
     void assemble(string);
-    void dissassemble(unsigned int, int, int, bool, bool);
+    void dissassemble(unsigned int, int, int,bool, bool, bool);
     enum InstructionFormat { R_FORMAT, I_FORMAT, J_FORMAT };
     InstructionFormat getFormat() const;
     int getOpcode() const;
@@ -42,9 +42,9 @@ private:
     int imm;
     int liImm;
     int signedImm;
+    int addiImm;
     int address;
-    bool checkSubi;
-    void setAssembleyInstruction(int,int,bool,bool);
+    void setAssembleyInstruction(int,int,bool,bool,bool);
     string registerToName(int) const;
     string toBinary(int, int, bool) const;
     string twosCompliment(string, int) const;

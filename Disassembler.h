@@ -36,7 +36,7 @@ private:
     bool pLi2;
     bool  printLi;
     bool printSubi;
-    bool printSubiu;
+    bool printSubi2;
     
 };
 #endif /* defined(__Mars__Disassembler__) */

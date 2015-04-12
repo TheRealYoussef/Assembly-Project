@@ -44,10 +44,10 @@ void Disassembler::getData(){
         cerr<<"error in opening disassembling file\n";
     
     for (int i = 0 ; i < instfile.size(); i++) {
-        isAddi  = (instfile[i] >> 26 == 0x08);
         
         if (i<instfile.size()-1){
-            isSub   = (instfile[i+1] >>26 == 0);
+            isSub   = (instfile[i] >>26 == 0 && instfile[i-1] >> 26 == 0x08 );
+            isAddi   = (instfile[i+1] >>26 == 0 && instfile[i] >> 26 == 0x08 );
             temp_rd = (instfile[i+1] >> 11) & 0x1f;
             temp_rt = (instfile[i+1] >> 21) & 0x1f;
             pLi = ((instfile[i] >> 26 == 0x0F) && instfile[i+1] >> 26 == 0x0D);
@@ -59,10 +59,11 @@ void Disassembler::getData(){
         else
             pLi2 = false;
         printLi = (pLi || pLi2);
-        printSubi=(isAddi && isSub);
+        printSubi = isSub;
+  
         
         
-        x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,printLi); // calling the disassebling process
+        x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,isAddi,printLi); // calling the disassebling process
         inst.push_back(x);
         
     }

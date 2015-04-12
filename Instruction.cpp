@@ -17,21 +17,21 @@ void Instruction::assemble(string assemblyInstruction)
     int idx = 0;
     while (!isalpha(assemblyInstruction[idx]))
         idx++;
-	while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && idx < assemblyInstruction.length())
+    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && idx < assemblyInstruction.length())
     {
         instruction += tolower(assemblyInstruction[idx]);
         idx++;
     }
-   binaryInstruction = "";
-	if (instruction == "j" || instruction == "jal")
-		setJFormat(instruction, idx);
-	else if (instruction == "add" || instruction == "addu" || instruction == "sub" || instruction == "and" || instruction == "or" || instruction == "xor" || instruction == "slt" || instruction == "jr" || instruction == "sll" || instruction == "srl" || instruction == "syscall")
-		setRFormat(instruction, idx);
-	else if (instruction == "lui" || instruction == "beq" || instruction == "bne" || instruction == "lw" || instruction == "sw" || instruction == "lb" || instruction == "sb" || instruction == "lh" || instruction == "sh" || instruction == "addi" || instruction == "addiu" || instruction == "andi" || instruction == "ori" || instruction == "xori")
-		setIFormat(instruction, idx);
+    binaryInstruction = "";
+    if (instruction == "j" || instruction == "jal")
+        setJFormat(instruction, idx);
+    else if (instruction == "add" || instruction == "addu" || instruction == "sub" || instruction == "and" || instruction == "or" || instruction == "xor" || instruction == "slt" || instruction == "jr" || instruction == "sll" || instruction == "srl" || instruction == "syscall")
+        setRFormat(instruction, idx);
+    else if (instruction == "lui" || instruction == "beq" || instruction == "bne" || instruction == "lw" || instruction == "sw" || instruction == "lb" || instruction == "sb" || instruction == "lh" || instruction == "sh" || instruction == "addi" || instruction == "addiu" || instruction == "andi" || instruction == "ori" || instruction == "xori")
+        setIFormat(instruction, idx);
 }
 
-void Instruction::dissassemble(unsigned int binaryInstruction, int trd, int trt, bool subi, bool li)
+void Instruction::dissassemble(unsigned int binaryInstruction, int trd, int trt, bool subi,bool subi2, bool li)
 {
     opcode = binaryInstruction >> 26;
     if (opcode == 0)
@@ -56,13 +56,12 @@ void Instruction::dissassemble(unsigned int binaryInstruction, int trd, int trt,
     
     int temp_rd=trd;
     int temp_rt=trt;
-    bool psubi=subi,pLi=li;
-    setAssembleyInstruction(temp_rd ,temp_rt, psubi,pLi );
-    checkSubi = subi;
+    bool psubi=subi,pLi=li, psubi2 = subi2;
+    setAssembleyInstruction(temp_rd ,temp_rt, psubi, psubi2, pLi);
 }
 
 
-void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li)
+void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi, bool isAddi, bool li)
 {
     
     if (opcode == 0)
@@ -73,21 +72,22 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
                 assemblyInstruction = "jr " + registerToName(rs);
                 break;
             case 0x20:
-                    assemblyInstruction = "add " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                assemblyInstruction = "add " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x21:
                 if (rs == 0) {
                     assemblyInstruction = "move " + registerToName(rd) + ", " + registerToName(rt);
                 }
                 else
-                assemblyInstruction = "addu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                    assemblyInstruction = "addu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x22:
                 //Re-test this part
-                if (checkSubi == 1)
-                    assemblyInstruction = "subi " + registerToName(rd) + ", " + registerToName(rs) + ", " + to_string(signedImm);
+                if (subi == 1)
+                    assemblyInstruction = "subi " + registerToName(rd) + ", " + registerToName(rs) + ", " + to_string(addiImm);
                 else
                     assemblyInstruction = "sub " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                
                 break;
             case 0x23:
                 assemblyInstruction = "subu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
@@ -131,14 +131,15 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
         switch (opcode)
         {
             case 0x08:
-                if (rs == 0 && subi == false)
+                if (rs == 0 && isAddi == false)
                     assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
                 else //Check on different test cases
-                    if (subi == 1) {
+                    if (isAddi == 1) {
                         assemblyInstruction ="";
                     }
                     else
                         assemblyInstruction = "addi " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
+                addiImm = signedImm;
                 break;
             case 0x09:
                 if (rs == 0)
@@ -385,7 +386,7 @@ void Instruction::setJFormat(string instruction, int & idx)
     while (!isdigit(assemblyInstruction[idx]))
         idx++;
     string temp = "";
-	while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\n' && idx < assemblyInstruction.length())
+    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\n' && idx < assemblyInstruction.length())
     {
         temp += assemblyInstruction[idx];
         idx++;
@@ -429,7 +430,7 @@ void Instruction::setShiftInstruction(string instruction, int & idx)
     string temp = "";
     while (assemblyInstruction[idx] != '$')
         idx++;
-	while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t')
+    while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t')
     {
         temp += tolower(assemblyInstruction[idx]);
         idx++;
@@ -438,7 +439,7 @@ void Instruction::setShiftInstruction(string instruction, int & idx)
     temp = "";
     while (assemblyInstruction[idx] != '$')
         idx++;
-	while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t')
+    while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t')
     {
         temp += tolower(assemblyInstruction[idx]);
         idx++;
@@ -453,11 +454,11 @@ void Instruction::setShiftInstruction(string instruction, int & idx)
         idx++;
     }
     if ((shamt = hexaToDecimal(temp, 2)) > 31)
-		TERMINATE = true;
-	if (instruction == "sll")
-		func = 0;
-	else
-		func = 2;
+        TERMINATE = true;
+    if (instruction == "sll")
+        func = 0;
+    else
+        func = 2;
 }
 
 void Instruction::setJrInstruction(string instruction, int & idx)
@@ -560,7 +561,7 @@ void Instruction::setLui(int & idx)
         idx++;
     }
     signedImm = hexaToDecimal(temp, 4);
-	imm = signedImm & 0x0000ffff;
+    imm = signedImm & 0x0000ffff;
 }
 
 void Instruction::setBranchInstruction(string instruction, int & idx)
@@ -592,8 +593,8 @@ void Instruction::setBranchInstruction(string instruction, int & idx)
         temp += assemblyInstruction[idx];
         idx++;
     }
-	signedImm = hexaToDecimal(temp, 4);
-	imm = signedImm & 0x0000ffff;
+    signedImm = hexaToDecimal(temp, 4);
+    imm = signedImm & 0x0000ffff;
 }
 
 void Instruction::setMemoryInstruction(string instruction, int & idx)
@@ -616,8 +617,8 @@ void Instruction::setMemoryInstruction(string instruction, int & idx)
         temp += tolower(assemblyInstruction[idx]);
         idx++;
     }
-	signedImm = hexaToDecimal(temp, 4);
-	imm = signedImm & 0x0000ffff;
+    signedImm = hexaToDecimal(temp, 4);
+    imm = signedImm & 0x0000ffff;
     temp = "";
     while (assemblyInstruction[idx] != '$')
         idx++;
@@ -635,8 +636,8 @@ void Instruction::setNormalIFormat(string instruction, int & idx)
     string temp = "";
     while (assemblyInstruction[idx] != '$')
         idx++;
-	while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t')
-	{
+    while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t')
+    {
         temp += tolower(assemblyInstruction[idx]);
         idx++;
     }
@@ -658,8 +659,8 @@ void Instruction::setNormalIFormat(string instruction, int & idx)
         temp += tolower(assemblyInstruction[idx]);
         idx++;
     }
-	signedImm = hexaToDecimal(temp, 4);
-	imm = signedImm & 0x0000ffff;
+    signedImm = hexaToDecimal(temp, 4);
+    imm = signedImm & 0x0000ffff;
 }
 
 Instruction::InstructionFormat Instruction::getFormat() const
@@ -724,40 +725,40 @@ string Instruction::getBinaryInstruction() const
 
 int Instruction::hexaToDecimal(const string & hexa, int n)
 {
-	if (hexa.length() > 2)
-	{
-		if (hexa[1] == 'x')
-		{
-			int ans = 0;
-			int i = hexa.length() - 1;
-			while (i >= 0 && n > 0)
-			{
-				if (hexa[i] >= '0' && hexa[i] <= '9')
-					ans += ((hexa[i] - '0') << (4 * (hexa.length() - 1 - i)));
-				else if (hexa[i] >= 'a' && hexa[i] <= 'f')
-					ans += ((hexa[i] - 'a' + 10) << (4 * (hexa.length() - 1 - i)));
-				else if (hexa[i] >= 'A' && hexa[i] <= 'F')
-					ans += ((hexa[i] - 'A' + 10) << (4 * (hexa.length() - 1 - i)));
-				i--;
-				n--;
-			}
-			return ans;
-		}
-		else
-		{
-			int y = atoi(hexa.c_str());
-			int z;
-			z = (y << (n * 4));
-			z = (z >> (n * 4));
-			return z;
-		}
-	}
-	else
-	{
-		int y = atoi(hexa.c_str());
-		int z;
-		z = (y << (n * 4));
-		z = (z >> (n * 4));
-		return z;
-	}
+    if (hexa.length() > 2)
+    {
+        if (hexa[1] == 'x')
+        {
+            int ans = 0;
+            int i = hexa.length() - 1;
+            while (i >= 0 && n > 0)
+            {
+                if (hexa[i] >= '0' && hexa[i] <= '9')
+                    ans += ((hexa[i] - '0') << (4 * (hexa.length() - 1 - i)));
+                else if (hexa[i] >= 'a' && hexa[i] <= 'f')
+                    ans += ((hexa[i] - 'a' + 10) << (4 * (hexa.length() - 1 - i)));
+                else if (hexa[i] >= 'A' && hexa[i] <= 'F')
+                    ans += ((hexa[i] - 'A' + 10) << (4 * (hexa.length() - 1 - i)));
+                i--;
+                n--;
+            }
+            return ans;
+        }
+        else
+        {
+            int y = atoi(hexa.c_str());
+            int z;
+            z = (y << (n * 4));
+            z = (z >> (n * 4));
+            return z;
+        }
+    }
+    else
+    {
+        int y = atoi(hexa.c_str());
+        int z;
+        z = (y << (n * 4));
+        z = (z >> (n * 4));
+        return z;
+    }
 }
