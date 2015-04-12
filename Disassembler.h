@@ -32,6 +32,7 @@ private:
     bool isAddi;
     bool isSub;
     bool isSubu;
+    int opcode;
     bool  pLi;
     bool pLi2;
     bool  printLi;
