@@ -17,7 +17,7 @@ void Instruction::assemble(string assemblyInstruction)
     int idx = 0;
     while (!isalpha(assemblyInstruction[idx]))
         idx++;
-	while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\t' && idx < assemblyInstruction.length())
+	while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && idx < assemblyInstruction.length())
     {
         instruction += tolower(assemblyInstruction[idx]);
         idx++;
@@ -133,7 +133,7 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi,bool li
             case 0x08:
                 if (rs == 0 && subi == false)
                     assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
-                else //CHeck on different test cases
+                else //Check on different test cases
                     if (subi == 1) {
                         assemblyInstruction ="";
                     }
@@ -385,7 +385,7 @@ void Instruction::setJFormat(string instruction, int & idx)
     while (!isdigit(assemblyInstruction[idx]))
         idx++;
     string temp = "";
-	while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\n' && idx < assemblyInstruction.length())
+	while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\n' && idx < assemblyInstruction.length())
     {
         temp += assemblyInstruction[idx];
         idx++;
@@ -429,7 +429,7 @@ void Instruction::setShiftInstruction(string instruction, int & idx)
     string temp = "";
     while (assemblyInstruction[idx] != '$')
         idx++;
-	while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\t')
+	while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t')
     {
         temp += tolower(assemblyInstruction[idx]);
         idx++;
@@ -438,7 +438,7 @@ void Instruction::setShiftInstruction(string instruction, int & idx)
     temp = "";
     while (assemblyInstruction[idx] != '$')
         idx++;
-	while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\t')
+	while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t')
     {
         temp += tolower(assemblyInstruction[idx]);
         idx++;
@@ -635,7 +635,7 @@ void Instruction::setNormalIFormat(string instruction, int & idx)
     string temp = "";
     while (assemblyInstruction[idx] != '$')
         idx++;
-	while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\t')
+	while (assemblyInstruction[idx] != ',' && assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t')
 	{
         temp += tolower(assemblyInstruction[idx]);
         idx++;
