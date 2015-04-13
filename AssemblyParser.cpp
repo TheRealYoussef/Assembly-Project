@@ -91,7 +91,7 @@ void AssemblyParser::getDataLabels()
 									while (c != '\'')
 										input.get(c);
 								}
-								while (c != ' ' && c != '\t' && c != ',' && c != '#' && c != '\n' && !input.eof())
+								while (c != ' ' && c != '\t' && c != '\r' && c != ',' && c != '#' && c != '\n' && !input.eof())
 									input.get(c);
 								while (!isalpha(c) && !isdigit(c) && c != '\'' && c != '#' && c != '\n' && !input.eof())
 									input.get(c);
@@ -119,7 +119,7 @@ void AssemblyParser::getDataLabels()
 									while (c != '\'')
 										input.get(c);
 								}
-								while (c != ' ' && c != '\t' && c != ',' && c != '#' && c != '\n' && !input.eof())
+								while (c != ' ' && c != '\t' && c != '\r' && c != ',' && c != '#' && c != '\n' && !input.eof())
 									input.get(c);
 								while (!isalpha(c) && !isdigit(c) && c != '\'' && c != '#' && c != '\n' && !input.eof())
 									input.get(c);
@@ -145,7 +145,7 @@ void AssemblyParser::getDataLabels()
 									while (c != '\'')
 										input.get(c);
 								}
-								while (c != ' ' && c != '\t' && c != ',' && c != '#' && c != '\n' && !input.eof())
+								while (c != ' ' && c != '\t' && c != '\r' && c != ',' && c != '#' && c != '\n' && !input.eof())
 									input.get(c);
 								while (!isalpha(c) && !isdigit(c) && c != '\'' && c != '#' && c != '\n' && !input.eof())
 									input.get(c);
@@ -163,7 +163,7 @@ void AssemblyParser::getDataLabels()
 						if (isdigit(c))
 						{
 							string n = "";
-							while (c != '#' && c != '\n' && c != ' ' && c != '\t' && !input.eof())
+							while (c != '#' && c != '\n' && c != ' ' && c != '\t' && c != '\r' && !input.eof())
 							{
 								n += c;
 								input.get(c);
@@ -331,7 +331,7 @@ void AssemblyParser::parseData(Memory & memory)
 								}
 								else
 								{
-									while (c != ' ' && c != '\t' && c != ',' && c != '#' && c != '\n' && !input.eof())
+									while (c != ' ' && c != '\t' && c != '\r' && c != ',' && c != '#' && c != '\n' && !input.eof())
 									{
 										word += c;
 										input.get(c);
@@ -383,7 +383,7 @@ void AssemblyParser::parseData(Memory & memory)
 								}
 								else
 								{
-									while (c != ' ' && c != '\t' && c != ',' && c != '#' && c != '\n' && !input.eof())
+									while (c != ' ' && c != '\t' && c != '\r' && c != ',' && c != '#' && c != '\n' && !input.eof())
 									{
 										half += c;
 										input.get(c);
@@ -435,7 +435,7 @@ void AssemblyParser::parseData(Memory & memory)
 								}
 								else
 								{
-									while (c != ' ' && c != '\t' && c != ',' && c != '#' && c != '\n' && !input.eof())
+									while (c != ' ' && c != '\t' && c != '\r' && c != ',' && c != '#' && c != '\n' && !input.eof())
 									{
 										byte += c;
 										input.get(c);
@@ -483,7 +483,7 @@ void AssemblyParser::parseData(Memory & memory)
 						else if (isdigit(c))
 						{
 							string n = "";
-							while (c != ' ' && c != '\t' && c != '#' && c != '\n' && !input.eof())
+							while (c != ' ' && c != '\t' && c != '\r' && c != '#' && c != '\n' && !input.eof())
 							{
 								n += c;
 								input.get(c);
@@ -766,7 +766,7 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						if (isalpha(c))
 						{
 							string label = "";
-							while (c != '\n' && c != '#' && c != ' ' && c != '\t' && !input.eof())
+							while (c != '\n' && c != '#' && c != ' ' && c != '\t' && c != '\r' && !input.eof())
 							{
 								label += c;
 								input.get(c);
@@ -775,7 +775,7 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						}
 						else if (isdigit(c))
 						{
-							while (c != '\n' && c != '#' && !input.eof() && c != ' ' && c != '\t')
+							while (c != '\n' && c != '#' && !input.eof() && c != ' ' && c != '\t' && c != '\r')
 							{
 								instruction += c;
 								input.get(c);
@@ -810,7 +810,7 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						if (isalpha(c))
 						{
 							string label = "";
-							while (c != '\n' && c != '#' && c != ' ' && c != '\t' && !input.eof())
+							while (c != '\n' && c != '#' && c != ' ' && c != '\t' && c != '\r' && !input.eof())
 							{
 								label += c;
 								input.get(c);
@@ -819,7 +819,7 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						}
 						else
 						{
-							while (c != '\n' && c != '#' && !input.eof() && c != ' ' && c != '\t')
+							while (c != '\n' && c != '#' && !input.eof() && c != ' ' && c != '\t' && c != '\r')
 							{
 								instruction += c;
 								input.get(c);
@@ -843,7 +843,7 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 							instruction += c;
 							input.get(c);
 						}
-						while (c != ',' && c != ' ' && c != '\t')
+						while (c != ',' && c != ' ' && c != '\t' && c != '\r')
 						{
 							instruction += c;
 							input.get(c);
@@ -856,7 +856,7 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						if (isdigit(c))
 						{
 							string n = "";
-							while (c != ' ' && c != '\t' && c != '#' && c != '\n' && !input.eof())
+							while (c != ' ' && c != '\t' && c != '\r' && c != '#' && c != '\n' && !input.eof())
 							{
 								n += c;
 								input.get(c);
@@ -877,7 +877,7 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						else
 						{
 							string label = "";
-							while (c != ' ' && c != '\t' && c != '#' && c != '\n' && !input.eof())
+							while (c != ' ' && c != '\t' && c != '\r' && c != '#' && c != '\n' && !input.eof())
 							{
 								label += c;
 								input.get(c);
@@ -911,7 +911,7 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						input.get(c);
 						while (c != '$')
 							input.get(c);
-						while (c != ' ' && c != ',' && c != '\t')
+						while (c != ' ' && c != ',' && c != '\t' && c != '\r')
 						{
 							reg += c;
 							input.get(c);
@@ -920,7 +920,7 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 							input.get(c);
 						if (isdigit(c))
 						{
-							while (c != ' ' && c != '\t' && c != '#' && c != '\n' && !input.eof())
+							while (c != ' ' && c != '\t' && c != '\r' && c != '#' && c != '\n' && !input.eof())
 							{
 								immediate += c;
 								input.get(c);
@@ -958,7 +958,7 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						else if (isalpha(c))
 						{
 							string label = "";
-							while (c != ' ' && c != '\t' && c != '#' && c != '\n' && !input.eof())
+							while (c != ' ' && c != '\t' && c != '\r'  && c != '\r'&& c != '#' && c != '\n' && !input.eof())
 							{
 								label += c;
 								input.get(c);
@@ -1024,14 +1024,14 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						input.get(c);
 						while (c != '$')
 							input.get(c);
-						while (c != ',' && c != ' ' && c != '\t')
+						while (c != ',' && c != ' ' && c != '\t' && c != '\r')
 						{
 							reg1 += c;
 							input.get(c);
 						}
 						while (c != '$')
 							input.get(c);
-						while (c != ' ' && c != '\t' && c != '#' && c != '\n' && !input.eof())
+						while (c != ' ' && c != '\t' && c != '\r' && c != '#' && c != '\n' && !input.eof())
 						{
 							reg2 += c;
 							input.get(c);
@@ -1056,14 +1056,14 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						input.get(c);
 						while (c != '$')
 							input.get(c);
-						while (c != ' ' && c != '\t' && c != ',')
+						while (c != ' ' && c != '\t' && c != '\r' && c != ',')
 						{
 							reg1 += c;
 							input.get(c);
 						}
 						while (c != '$')
 							input.get(c);
-						while (c != ' ' && c != '\t' && c != ',')
+						while (c != ' ' && c != '\t' && c != '\r' && c != ',')
 						{
 							reg2 += c;
 							input.get(c);
@@ -1082,7 +1082,7 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						}
 						else
 						{
-							while (c != ' ' && c != '\t' && c != '#' && c != '\n' && !input.eof())
+							while (c != ' ' && c != '\t' && c != '\r' && c != '#' && c != '\n' && !input.eof())
 							{
 								imm += c;
 								input.get(c);
