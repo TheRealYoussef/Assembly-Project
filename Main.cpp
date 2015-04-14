@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
 			if (memoryDumpFile != "")
 				simulator.memory.MemoryArray(memoryDumpFile);
 			Disassembler disassembler(textDumpFile);
-			disassembler.display(assemblyCodeFile);
+			disassembler.display(assemblyCodeFile, simulator);
 			disassembler.simulatorData(sim);
 			simulator.program = sim;
 			simulator.simulate();
