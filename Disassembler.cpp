@@ -72,7 +72,7 @@ void Disassembler::getData(){
 }
 
 void Disassembler::display(string path){
-    
+    Memory memory;
     ofstream outfile;
     outfile.open(path.c_str());
     if (outfile.is_open()) {
@@ -100,8 +100,16 @@ void Disassembler::display(string path){
             
             
         }
+        outfile << ".data\n.word ";
+        for (int addr = 0x10010000; addr < 0x10010000 + 8192; addr += 4)
+        {
+            outfile << "0x";
+            outfile << hex << memory.loadWord(addr) << ", ";
+        }
+        outfile << '\n';
         
         outfile<<".text"<<endl;
+        
         for (int i = 0 ; i < instfile.size() ; i++) {
             
             //Printing labels

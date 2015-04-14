@@ -4,6 +4,7 @@
 #include "Simulator.h"
 #include <fstream>
 #include <vector>
+#include "Memory.h"
 
 class Disassembler{
     
