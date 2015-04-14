@@ -11,7 +11,7 @@ class Disassembler{
 public:
     Disassembler(string);
     void getData();
-    void display(string);
+    void display(string,Simulator&);
     int getOpcode(int) const;
     int getSImm(int);
     void simulatorData( vector<Instruction>&);
@@ -39,6 +39,7 @@ private:
     bool  printLi;
     bool printSubi;
     bool printSubi2;
+    Simulator tempSimulator;
     
 };
 #endif /* defined(__Mars__Disassembler__) */

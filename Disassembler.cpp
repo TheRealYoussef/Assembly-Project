@@ -5,6 +5,7 @@ using namespace std;
 Disassembler::Disassembler(string x){
     inFileName =x;
     getData();
+  
     
 }
 
@@ -71,7 +72,7 @@ void Disassembler::getData(){
     
 }
 
-void Disassembler::display(string path){
+void Disassembler::display(string path,Simulator& simulator){
     Memory memory;
     ofstream outfile;
     outfile.open(path.c_str());
@@ -104,7 +105,7 @@ void Disassembler::display(string path){
         for (int addr = 0x10010000; addr < 0x10010000 + 8192; addr += 4)
         {
             outfile << "0x";
-            outfile << hex << memory.loadWord(addr) << ", ";
+            outfile << hex << simulator.memory.loadWord(addr) << ", ";
         }
         outfile << '\n';
         
