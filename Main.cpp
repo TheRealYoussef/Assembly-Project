@@ -74,10 +74,7 @@ int main(int argc, char *argv[])
 							assemblyCodeFile = "AssemblyCode.s";
 						}
 						else if (isAssemblyCodeFile(optionalFile))
-						{
 							assemblyCodeFile = optionalFile;
-							memoryDumpFile = "MemoryDump.bin";
-						}
 						else
 						{
 							cerr << "Invalid file path.\n";
@@ -114,10 +111,7 @@ int main(int argc, char *argv[])
 					}
 				}
 				else
-				{
-					memoryDumpFile = "MemoryDump.bin";
 					assemblyCodeFile = "AssemblyCode.s";
-				}
 			}
 			else
 			{
@@ -134,7 +128,8 @@ int main(int argc, char *argv[])
 		{
 			vector<Instruction> sim;
 			Simulator simulator;
-			simulator.memory.MemoryArray(memoryDumpFile);
+			if (memoryDumpFile != "")
+				simulator.memory.MemoryArray(memoryDumpFile);
 			Disassembler disassembler(textDumpFile);
 			disassembler.display(assemblyCodeFile);
 			disassembler.simulatorData(sim);
