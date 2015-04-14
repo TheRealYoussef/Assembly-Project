@@ -46,7 +46,101 @@ int main(int argc, char *argv[])
 	}
 	if (programType == "-d")
 	{
-
+		string assemblyCodeFile = "", textDumpFile = "", memoryDumpFile = "", optionalFile = "";
+		int assemblyCodeIdx = 4, textDumpFileIdx = 2, memoryDumpFileIdx = 3, optionalFileIdx = 3;
+		if (argc >= 3 && argc <= 5)
+		{
+			idx = 0;
+			while (argv[textDumpFileIdx][idx] != '\0')
+			{
+				textDumpFile += argv[textDumpFileIdx][idx];
+				idx++;
+			}
+			if (isDumpFile(textDumpFile))
+			{
+				if (argc > 3)
+				{
+					if (argc == 4)
+					{
+						idx = 0;
+						while (argv[optionalFileIdx][idx] != '\0')
+						{
+							optionalFile += argv[optionalFileIdx][idx];
+							idx++;
+						}
+						if (isDumpFile(optionalFile))
+						{
+							memoryDumpFile = optionalFile;
+							assemblyCodeFile = "AssemblyCode.s";
+						}
+						else if (isAssemblyCodeFile(optionalFile))
+						{
+							assemblyCodeFile = optionalFile;
+							memoryDumpFile = "MemoryDump.bin";
+						}
+						else
+						{
+							cerr << "Invalid file path.\n";
+							TERMINATE = true;
+						}
+					}
+					else
+					{
+						idx = 0;
+						while (argv[memoryDumpFileIdx][idx] != '\0')
+						{
+							memoryDumpFile += argv[memoryDumpFileIdx][idx];
+							idx++;
+						}
+						if (!isDumpFile(memoryDumpFile))
+						{
+							cerr << "Invalid memory dump file path.\n";
+							TERMINATE = true;
+						}
+						else
+						{
+							idx = 0;
+							while (argv[assemblyCodeIdx][idx] != '\0')
+							{
+								assemblyCodeFile += argv[assemblyCodeIdx][idx];
+								idx++;
+							}
+							if (!isAssemblyCodeFile(assemblyCodeFile))
+							{
+								cerr << "Invalid assembly code file path.\n";
+								TERMINATE = true;
+							}
+						}
+					}
+				}
+				else
+				{
+					memoryDumpFile = "MemoryDump.bin";
+					assemblyCodeFile = "AssemblyCode.s";
+				}
+			}
+			else
+			{
+				cerr << "Invalid text dump file path.\n";
+				TERMINATE = true;
+			}
+		}
+		else
+		{
+			cerr << "Invalid command.\n";
+			TERMINATE = true;
+		}
+		if (!TERMINATE)
+		{
+			vector<Instruction> sim;
+			Simulator simulator;
+			simulator.memory.MemoryArray(memoryDumpFile);
+			Disassembler disassembler(textDumpFile);
+			disassembler.display(assemblyCodeFile);
+			disassembler.simulatorData(sim);
+			simulator.program = sim;
+			simulator.simulate();
+		}
 	}
 	else if (programType == "-a")
 	{
@@ -102,10 +196,16 @@ int main(int argc, char *argv[])
 				}
 			}
 			else
+			{
 				cerr << "Invalid assembly code file path.\n";
+				TERMINATE = true;
+			}
 		}
 		else
+		{
 			cerr << "Invalid command.\n";
+			TERMINATE = true;
+		}
 		if (!TERMINATE)
 		{
 			Simulator sim;
@@ -122,11 +222,17 @@ int main(int argc, char *argv[])
 bool isAssemblyCodeFile(const string & assemblyCodeFile)
 {
 	int length = assemblyCodeFile.length();
-	return ((assemblyCodeFile[length - 4] == '.' && assemblyCodeFile[length - 3] == 'a' && assemblyCodeFile[length - 2] == 's' && assemblyCodeFile[length - 1] == 'm') || (assemblyCodeFile[length - 2] == '.' && assemblyCodeFile[length - 1] == 's'));
+	if (length >= 4)
+		return ((assemblyCodeFile[length - 4] == '.' && assemblyCodeFile[length - 3] == 'a' && assemblyCodeFile[length - 2] == 's' && assemblyCodeFile[length - 1] == 'm') || (assemblyCodeFile[length - 2] == '.' && assemblyCodeFile[length - 1] == 's'));
+	else
+		return false;
 }
 
 bool isDumpFile(const string & dumpFile)
 {
 	int length = dumpFile.length();
-	return (dumpFile[length - 4] == '.' && dumpFile[length - 3] == 'b' && dumpFile[length - 2] == 'i' && dumpFile[length - 1] == 'n');
+	if (length >= 4)
+		return (dumpFile[length - 4] == '.' && dumpFile[length - 3] == 'b' && dumpFile[length - 2] == 'i' && dumpFile[length - 1] == 'n');
+	else
+		return false;
 }
