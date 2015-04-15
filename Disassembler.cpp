@@ -17,8 +17,7 @@ void Disassembler::getData()
     
     // If the file is open (this will evaluate to false if the file could not be found)
     if(inFile.is_open())
-    {
-        
+    {   
         while(!inFile.eof())
         {
             instWord = 0;
@@ -39,33 +38,32 @@ void Disassembler::getData()
                 // instfile vector that stores all the binary instructions
                 instfile.push_back(instWord);                
             }
-        }
-        
+        }   
     }
     else
         cerr<<"error in opening disassembling file\n";
     
-    for (int i = 0 ; i < instfile.size(); i++) {
-        
-        if (i<instfile.size()-1){
-            isSub   = ((instfile[i] >>26 == 0) && ((instfile[i+1] & 0x3F) == 0x22)
-                       &&(instfile[i-1]>> 26 == 0x08));
-            isAddi = ((instfile[i+1] >> 26 == 0) && ((instfile[i+1] & 0x3F) == 0x22)) && (instfile[i] >> 26 == 0x08 );
-            temp_rd = (instfile[i+1] >> 11) & 0x1f;
-            temp_rt = (instfile[i+1] >> 21) & 0x1f;
-            pLi = ((instfile[i] >> 26 == 0x0F) && instfile[i+1] >> 26 == 0x0D);
-        }
-        else
-            pLi=false;
-        if (i>0)
-            pLi2 = ((instfile[i-1] >> 26 == 0x0F) && (instfile[i] >> 26 == 0x0D));
-        else
-            pLi2 = false;
-        printLi = (pLi || pLi2);
-        printSubi = isSub;
+    for (int i = 0 ; i < instfile.size(); i++) 
+	{    
+		if (i<instfile.size()-1)
+		{
+			isSub = ((instfile[i] >> 26 == 0) && ((instfile[i + 1] & 0x3F) == 0x22) && (instfile[i - 1] >> 26 == 0x08));
+			isAddi = ((instfile[i + 1] >> 26 == 0) && ((instfile[i + 1] & 0x3F) == 0x22)) && (instfile[i] >> 26 == 0x08);
+			temp_rd = (instfile[i + 1] >> 11) & 0x1f;
+			temp_rt = (instfile[i + 1] >> 21) & 0x1f;
+			pLi = ((instfile[i] >> 26 == 0x0F) && instfile[i + 1] >> 26 == 0x0D);
+		}
+		else
+			pLi=false;
+		if (i>0)
+			pLi2 = ((instfile[i - 1] >> 26 == 0x0F) && (instfile[i] >> 26 == 0x0D));
+		else
+			pLi2 = false;
+		printLi = (pLi || pLi2);
+		printSubi = isSub;
 
-        x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,isAddi,printLi); // calling the disassebling process
-        inst.push_back(x);   
+		x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,isAddi,printLi); // calling the disassebling process
+		inst.push_back(x);   
     }
 }
 
@@ -76,11 +74,11 @@ void Disassembler::display(string path, Simulator& simulator)
     outfile.open(path.c_str());
     if (outfile.is_open()) {
         //set vector label to the size of the instructions
-        labels.resize(instfile.size());
+        labels.resize(instfile.size() + 1);
+		
+		int counter = 0; //used in assigning numbers to the labels
         
-        int counter =0; //used in assigning numbers to the labels
-        
-        for (int i=0; i < instfile.size();i++)
+		for (int i = 0; i < instfile.size(); i++)
         {
             address =  (instfile[i] & 0x3FFFFFF) << 2; // extracting the address
             jumpIndex= (address - 0x00400000)/4; //the index of the label
@@ -96,8 +94,6 @@ void Disassembler::display(string path, Simulator& simulator)
             else
                 if ( (instfile[i] >> 26) == 0x04 || (instfile[i] >> 26) == 0x05 )
                     labels[branchIndex] = "label_"+ to_string(counter++) + ": ";
-            
-            
         }
         outfile << ".data\n.word ";
         for (int addr = 0x10010000; addr < 0x10010000 + 8192; addr += 4)
@@ -109,34 +105,37 @@ void Disassembler::display(string path, Simulator& simulator)
         
         outfile<<".text"<<endl;
         
-        for (int i = 0 ; i < instfile.size() ; i++) {
-            
+        for (int i = 0 ; i < labels.size() ; i++) 
+		{    
             //Printing labels
             if (labels[i] !="" )
                 outfile <<endl<<labels[i] << "          " << endl;
             
-            if (inst[i].getAssemblyInstruction() !="")
-            {
-                // printing j and jal with label
-                if (inst[i].getOpcode() == 2 || inst[i].getOpcode() == 3)
-                {
-                    jumpIndex = ( (inst[i].getAddress()<<2) - 0x00400000) / 4;
-                    long len =labels[jumpIndex].length()-1;
-                    string jString =labels[jumpIndex];
-                    outfile <<endl<< "          " << inst[i].getAssemblyInstruction() << jString.erase(abs(len - 1)) <<endl << endl; //erase is used to erase the ":"
-                }
-                else
-				if (inst[i].getOpcode() == 0x04 || inst[i].getOpcode() == 0x05)
+			if (i < inst.size())
+			{
+				if (inst[i].getAssemblyInstruction() != "")
 				{
-					//printing beq and bne with label
-					branchIndex = i + 1 + getSImm(i);
-					long len1 = labels[branchIndex].length() - 1;
-					string brString = labels[branchIndex];
-					outfile << "          " << inst[i].getAssemblyInstruction() << brString.erase(len1 - 1) << endl;
+					// printing j and jal with label
+					if (inst[i].getOpcode() == 2 || inst[i].getOpcode() == 3)
+					{
+						jumpIndex = ((inst[i].getAddress() << 2) - 0x00400000) / 4;
+						long len = labels[jumpIndex].length() - 1;
+						string jString = labels[jumpIndex];
+						outfile << endl << "          " << inst[i].getAssemblyInstruction() << jString.erase(abs(len - 1)) << endl << endl; //erase is used to erase the ":"
+					}
+					else
+					if (inst[i].getOpcode() == 0x04 || inst[i].getOpcode() == 0x05)
+					{
+						//printing beq and bne with label
+						branchIndex = i + 1 + getSImm(i);
+						long len1 = labels[branchIndex].length() - 1;
+						string brString = labels[branchIndex];
+						outfile << "          " << inst[i].getAssemblyInstruction() << brString.erase(len1 - 1) << endl;
+					}
+					else
+						outfile << "          " << inst[i].getAssemblyInstruction() << endl;
 				}
-				else
-					outfile << "          " << inst[i].getAssemblyInstruction() << endl;
-            }
+			}
         }
     }
     else
