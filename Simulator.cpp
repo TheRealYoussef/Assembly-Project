@@ -1,5 +1,10 @@
 #include "Simulator.h"
+#include "GLOBALS.h"
+
+#include <iostream>
 #include <iomanip>
+
+using namespace std;
 
 Simulator::Simulator(){}
 
@@ -325,13 +330,16 @@ void Simulator::run(Instruction *instruction)
 
 void Simulator::simulate()
 {
+	outfile.open("RegisterUpdate.txt");
     int i;
     do{
+		displayRegister();
         i=(cpu.programCounter-0x00400000)/4;
         cpu.programCounter+=4;
         if (i>=program.size())
             break;
 		run(&program[i]);
+		cpu.registers[0] = 0;
     } while(!TERMINATE);
 }
 
@@ -440,14 +448,15 @@ string Simulator::initializeName(int i)
     return registerName[i];
 }
 
-void Simulator::displayRegister(string path)
-{string x;
-	outfile.open(path.c_str());
+void Simulator::displayRegister()
+{
+	string x;
     if(outfile.is_open())
     {
         outfile<<"Name"<<setw(35)<<"Number"<<setw(35)<<"Value"<<endl;
         for(int i=0; i<32; i++)
             outfile<< initializeName(i)<<setw(35)<<i<<setw(35)<<cpu.registers[i]<<endl;
+		outfile << endl;
     }
     else
         cerr<<"Error in opening output file\n";

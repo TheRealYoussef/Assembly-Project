@@ -1,19 +1,19 @@
+#ifndef SIMULATOR_H
+#define SIMULATOR_H
+
 #include "CPU.h"
 #include "Memory.h"
 #include "Instruction.h"
-#include "GLOBALS.H"
 
-#include <iostream>
-#include <vector>
 #include <fstream>
+#include <vector>
 
-#ifndef SIMULATOR_H
-#define SIMULATOR_H
+using namespace std;
 
 class Simulator
 {
 public:
-    CPU cpu;
+	CPU cpu;
     Memory memory;
     string registerName[32];
     ofstream outfile;
@@ -51,7 +51,7 @@ public:
     void syscall(Instruction*);
 	void run(Instruction *);
     void simulate();
-	void displayRegister(string);
+	void displayRegister();
 };
 
 #endif

@@ -1,22 +1,26 @@
 #ifndef __Mars__Disassembler__
 #define __Mars__Disassembler__
+
 #include "Instruction.h"
 #include "Simulator.h"
+#include "Memory.h"
+
 #include <fstream>
 #include <vector>
-#include "Memory.h"
+#include <string>
+
+using namespace std;
 
 class Disassembler{
     
 public:
-    Disassembler(string);
+	Disassembler(string);
     void getData();
-    void display(string,Simulator&);
+	void display(string, Simulator&);
     int getOpcode(int) const;
     int getSImm(int);
-    void simulatorData( vector<Instruction>&);
+	void simulatorData(vector<Instruction>&);
 private:
-    
     char c;
     unsigned int instWord;
     ifstream inFile;
@@ -40,6 +44,5 @@ private:
     bool printSubi;
     bool printSubi2;
     Simulator tempSimulator;
-    
 };
-#endif /* defined(__Mars__Disassembler__) */
+#endif

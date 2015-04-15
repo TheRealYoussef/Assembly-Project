@@ -1,15 +1,18 @@
 #include "Disassembler.h"
+
 #include <iostream>
+#include <fstream>
+
 using namespace std;
 
-Disassembler::Disassembler(string x){
+Disassembler::Disassembler(string x)
+{
     inFileName =x;
     getData();
-  
-    
 }
 
-void Disassembler::getData(){
+void Disassembler::getData()
+{
     inFile.open(inFileName.c_str(), ios_base::in | ios_base::binary);
     
     // If the file is open (this will evaluate to false if the file could not be found)
@@ -34,9 +37,7 @@ void Disassembler::getData(){
             if (!inFile.eof())
             {
                 // instfile vector that stores all the binary instructions
-                instfile.push_back(instWord);
-                
-                
+                instfile.push_back(instWord);                
             }
         }
         
@@ -62,17 +63,14 @@ void Disassembler::getData(){
             pLi2 = false;
         printLi = (pLi || pLi2);
         printSubi = isSub;
-        
-        
-        
+
         x.dissassemble(instfile[i],temp_rd,temp_rt,printSubi,isAddi,printLi); // calling the disassebling process
-        inst.push_back(x);
-        
+        inst.push_back(x);   
     }
-    
 }
 
-void Disassembler::display(string path,Simulator& simulator){
+void Disassembler::display(string path, Simulator& simulator)
+{
     Memory memory;
     ofstream outfile;
     outfile.open(path.c_str());
@@ -128,16 +126,16 @@ void Disassembler::display(string path,Simulator& simulator){
                     outfile <<endl<< "          " << inst[i].getAssemblyInstruction() << jString.erase(abs(len - 1)) <<endl << endl; //erase is used to erase the ":"
                 }
                 else
-                    if ( inst[i].getOpcode() == 0x04 || inst[i].getOpcode() == 0x05 )
-                    {
-                        //printing beq and bne with label
-                        branchIndex = i + 1+ getSImm(i);
-                        long len1 = labels[branchIndex].length()-1;
-                        string brString = labels[branchIndex];
-                        outfile << "          " << inst[i].getAssemblyInstruction() << brString.erase(len1 - 1) << endl;
-                    }
-                    else
-                        outfile <<"          "<< inst[i].getAssemblyInstruction() << endl;
+				if (inst[i].getOpcode() == 0x04 || inst[i].getOpcode() == 0x05)
+				{
+					//printing beq and bne with label
+					branchIndex = i + 1 + getSImm(i);
+					long len1 = labels[branchIndex].length() - 1;
+					string brString = labels[branchIndex];
+					outfile << "          " << inst[i].getAssemblyInstruction() << brString.erase(len1 - 1) << endl;
+				}
+				else
+					outfile << "          " << inst[i].getAssemblyInstruction() << endl;
             }
         }
     }
@@ -146,15 +144,13 @@ void Disassembler::display(string path,Simulator& simulator){
 }
 
 
-int Disassembler:: getSImm(int i){
-    
+int Disassembler:: getSImm(int i)
+{
     int imm = (instfile[i] & 0xFFFF);
-    
     return ((imm & 0x8000) ? (0xFFFF0000 | imm) : imm);
 }
 
-void Disassembler:: simulatorData( vector<Instruction>& x){
-    
+void Disassembler::simulatorData(vector<Instruction>& x)
+{
     x = inst;
-    
 }

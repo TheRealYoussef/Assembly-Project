@@ -1,3 +1,6 @@
+#ifndef ASSEMBLYPARSER_H
+#define ASSEMBLYPARSER_H
+
 #include "Memory.h"
 #include "GLOBALS.h"
 
@@ -9,9 +12,6 @@
 #include <vector>
 
 using namespace std;
-
-#ifndef ASSEMBLYPARSER_H
-#define ASSEMBLYPARSER_H
 
 class AssemblyParser
 {

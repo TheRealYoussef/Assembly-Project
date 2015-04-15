@@ -1,8 +1,9 @@
-#include <iostream>
-using namespace std;
-
 #ifndef __Project_Assembly_1__CPU__
 #define __Project_Assembly_1__CPU__
+
+#include <iostream>
+
+using namespace std;
 
 class CPU
 {
@@ -24,4 +25,4 @@ public:
     
 };
 
-#endif /* defined(__Project_Assembly_1__CPU__) */
+#endif

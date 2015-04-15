@@ -1,11 +1,9 @@
-#include "GLOBALS.h"
+#ifndef INSTRUCTION_H
+#define INSTRUCTION_H
 
 #include <string>
 
 using namespace std;
-
-#ifndef INSTRUCTION_H
-#define INSTRUCTION_H
 
 class Instruction
 {
@@ -28,7 +26,6 @@ public:
     string getAssemblyInstruction() const;
     string getBinaryInstruction() const;
 private:
-    //Simulator simulator;
     string assemblyInstruction;
     string binaryInstruction;
     string pseudo;

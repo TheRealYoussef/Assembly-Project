@@ -1,8 +1,9 @@
-#include <iostream>
-using namespace std;
-
 #ifndef MEMORY_H
 #define MEMORY_H
+
+#include <string>
+
+using namespace std;
 
 class Memory
 {

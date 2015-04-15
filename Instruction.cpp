@@ -1,4 +1,6 @@
 #include "Instruction.h"
+#include "GLOBALS.h"
+
 #include <string>
 #include <stack>
 #include <cmath>

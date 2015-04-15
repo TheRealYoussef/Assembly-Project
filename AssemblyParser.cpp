@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -635,8 +636,6 @@ void AssemblyParser::getTextLabels()
 						input.get(c);
 					textAddress += 4;
 				}
-				else if (instruction[instruction.length() - 1] == ':')
-					labels[instruction.substr(0, instruction.length() - 1)] = textAddress;
 				else
 				{
 					if (instruction == "li" || instruction == "la" || instruction == "subi")
@@ -655,13 +654,18 @@ void AssemblyParser::getTextLabels()
 							input.get(c);
 						textAddress += 4;
 					}
-					else
+					else if (instruction[instruction.length() - 1] != ':')
 					{
 						cout << "Parsing error!\n";
 						TERMINATE = true;
 					}
 				}
 				input >> instruction;
+				if (instruction[instruction.length() - 1] == ':')
+				{
+					labels[instruction.substr(0, instruction.length() - 1)] = textAddress;
+					input >> instruction;
+				}
 			}
 		}
 		input.close();
@@ -896,11 +900,6 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 					for (int i = 3; i >= 0; i--)
 						output << characters[i];;
 				}
-				else if (str[str.length() - 1] == ':')
-				{
-					input >> str;
-					continue;
-				}
 				else
 				{
 					if (str == "li" || str == "la")
@@ -1124,6 +1123,8 @@ void AssemblyParser::parseText(vector<Instruction> & inst)
 						output << characters[i];;
 					input >> str;
 				}
+				else if (str[str.length() - 1] == ':')
+					input >> str;
 			}
 		}
 		output.close();
