@@ -1,6 +1,8 @@
 #include "Simulator.h"
 #include "GLOBALS.h"
 
+#include <QString>
+
 #include <iostream>
 #include <iomanip>
 
@@ -10,12 +12,13 @@ Simulator::Simulator(){}
 
 Simulator:: ~Simulator(){}
 
-void Simulator::add(Instruction* instruction)
+void Simulator::add(Instruction* instruction, QTextBrowser *textBrowser)
 {
     cpu.registers[instruction->getRd()] = cpu.registers[instruction->getRs()] + cpu.registers[instruction->getRt()];
     if((cpu.registers[instruction->getRs()] < 0 && cpu.registers[instruction->getRt()] < 0 && cpu.registers[instruction->getRd()] > 0 ) || (cpu.registers[instruction->getRs()] > 0 && cpu.registers[instruction->getRt()] > 0 && cpu.registers[instruction->getRd()] < 0 ))
     {
-        cout << "Overflow!!" << endl;
+        textBrowser->append("Overflow.\n");
+        TERMINATE = true;
     }
 }
 
@@ -184,25 +187,33 @@ void Simulator::lui(Instruction* instruction)
     cpu.registers[instruction->getRt()]=(instruction->getImm()<<16);
 }
 
-void Simulator::syscall(Instruction* instruction)
+void Simulator::syscall(QTextBrowser *textBrowser)
 {
 	int address = cpu.registers[4];
 	char t;
+    QString text;
 	switch (cpu.registers[2])
 	{
 		//print integer
 		case 1:
-			cout << cpu.registers[4];
+            text = QString::number(cpu.registers[4]);
+            textBrowser->insertPlainText(text);
+            textBrowser->moveCursor(QTextCursor::End);
 			break;
 		// print character
 		case 11:
-			cout << char(cpu.registers[4] & 0xff);
+            text = "";
+            text += (char)(cpu.registers[4] & 0xff);
+            textBrowser->insertPlainText(text);
+            textBrowser->moveCursor(QTextCursor::End);
 			break;
 		//print string
 		case 4:
 			while((t = memory.loadByte(address)) != 0)
 			{
-				cout << t;
+                text = "";
+                text += t;
+                textBrowser->insertPlainText(text);
 				address++;
 			}
 			break;
@@ -213,7 +224,7 @@ void Simulator::syscall(Instruction* instruction)
 	}
 }
 
-void Simulator::run(Instruction *instruction)
+void Simulator::run(Instruction *instruction, QTextBrowser *textBrowser)
 {
 	if (instruction->getOpcode() == 0)
 	{
@@ -223,7 +234,7 @@ void Simulator::run(Instruction *instruction)
 			jr(instruction);
 			break;
 		case 0x20:
-			add(instruction);
+            add(instruction, textBrowser);
 			break;
 		case 0x21:
 			addu(instruction);
@@ -250,10 +261,10 @@ void Simulator::run(Instruction *instruction)
 			xoring(instruction);
 			break;
 		case 0x0C:
-			syscall(instruction);
+            syscall(textBrowser);
 			break;
 		default:
-			cerr << "Error in extracting R- Format in simulator\n";
+            cerr << "Error in extracting R- Format in simulator.\n";
 		}
 	}
 	else if (instruction->getOpcode() != 0 && instruction->getOpcode() != 2 && instruction->getOpcode() != 3)
@@ -306,7 +317,7 @@ void Simulator::run(Instruction *instruction)
 			bne(instruction);
 			break;
 		default:
-			cerr << "Error in extracting I- Format in simulator\n";
+            cerr << "Error in extracting I- Format in simulator.\n";
 			break;
 		}
 	}
@@ -321,25 +332,27 @@ void Simulator::run(Instruction *instruction)
 			jal(instruction);
 			break;
 		default:
-			cerr << "Error in extracting J- Format in simulator\n";
+            cerr << "Error in extracting J- Format in simulator.\n";
 			break;
 		}
 	}
 
 }
 
-void Simulator::simulate()
+void Simulator::simulate(const string & registerUpdateFile, QTextBrowser *textBrowser)
 {
-	outfile.open("RegisterUpdate.txt");
+    outfile.open(registerUpdateFile.c_str());
+    outfile << "Initial State:\n";
     int i;
     do{
-		displayRegister();
+        displayRegister(textBrowser);
         i=(cpu.programCounter-0x00400000)/4;
         cpu.programCounter+=4;
-        if (i>=program.size())
+        if (i>=(int)(program.size()))
             break;
-		run(&program[i]);
+        run(&program[i], textBrowser);
 		cpu.registers[0] = 0;
+        outfile << program[i].getInitialAssemblyInstruction() << '\n';
     } while(!TERMINATE);
 }
 
@@ -448,16 +461,15 @@ string Simulator::initializeName(int i)
     return registerName[i];
 }
 
-void Simulator::displayRegister()
+void Simulator::displayRegister(QTextBrowser *textBrowser)
 {
-	string x;
     if(outfile.is_open())
     {
         outfile<<"Name"<<setw(35)<<"Number"<<setw(35)<<"Value"<<endl;
         for(int i=0; i<32; i++)
             outfile<< initializeName(i)<<setw(35)<<i<<setw(35)<<cpu.registers[i]<<endl;
-		outfile << endl;
+        outfile << '\n';
     }
     else
-        cerr<<"Error in opening output file\n";
+        textBrowser->append("Error in opening output file.\n");
 }

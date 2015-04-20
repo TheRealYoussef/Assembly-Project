@@ -12,14 +12,15 @@ Instruction::Instruction()
 {
 }
 
-void Instruction::assemble(string assemblyInstruction)
+void Instruction::assemble(const string & assemblyInstruction, const string & initialAssemblyInstruction)
 {
     this->assemblyInstruction = assemblyInstruction;
+    this->initialAssemblyInstruction = initialAssemblyInstruction;
     string instruction = "";
     int idx = 0;
     while (!isalpha(assemblyInstruction[idx]))
         idx++;
-	while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && idx < assemblyInstruction.length())
+    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && idx < (int)(assemblyInstruction.length()))
     {
         instruction += tolower(assemblyInstruction[idx]);
         idx++;
@@ -71,61 +72,61 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi, bool i
         switch (func)
         {
             case 0x08:
-                assemblyInstruction = "jr " + registerToName(rs);
+                initialAssemblyInstruction = assemblyInstruction = "jr " + registerToName(rs);
                 break;
             case 0x20:
-                assemblyInstruction = "add " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                initialAssemblyInstruction = assemblyInstruction = "add " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x21:
                 if (rs == 0) {
-                    assemblyInstruction = "move " + registerToName(rd) + ", " + registerToName(rt);
+                    initialAssemblyInstruction = assemblyInstruction = "move " + registerToName(rd) + ", " + registerToName(rt);
                 }
                 else
-                    assemblyInstruction = "addu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                    initialAssemblyInstruction = assemblyInstruction = "addu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x22:
                 //Re-test this part
                 if (subi == 1)
-                    assemblyInstruction = "subi " + registerToName(rd) + ", " + registerToName(rs) + ", " + to_string(addiImm);
+                    initialAssemblyInstruction = assemblyInstruction = "subi " + registerToName(rd) + ", " + registerToName(rs) + ", " + to_string(addiImm);
                 else
-                    assemblyInstruction = "sub " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                    initialAssemblyInstruction = assemblyInstruction = "sub " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 
                 break;
             case 0x23:
-                assemblyInstruction = "subu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                initialAssemblyInstruction = assemblyInstruction = "subu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x2A:
-                assemblyInstruction = "slt " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                initialAssemblyInstruction = assemblyInstruction = "slt " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x2B:
-                assemblyInstruction = "sltu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                initialAssemblyInstruction = assemblyInstruction = "sltu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x00:
-                assemblyInstruction = "sll " + registerToName(rd) + ", " + registerToName(rt) + ", " + to_string(shamt);
+                initialAssemblyInstruction = assemblyInstruction = "sll " + registerToName(rd) + ", " + registerToName(rt) + ", " + to_string(shamt);
                 break;
             case 0x02:
-                assemblyInstruction = "srl " + registerToName(rd) + ", " + registerToName(rt) + ", " + to_string(shamt);
+                initialAssemblyInstruction = assemblyInstruction = "srl " + registerToName(rd) + ", " + registerToName(rt) + ", " + to_string(shamt);
                 break;
             case 0x03:
-                assemblyInstruction = "sra " + registerToName(rd) + ", " + registerToName(rt) + ", " + to_string(shamt);
+                initialAssemblyInstruction = assemblyInstruction = "sra " + registerToName(rd) + ", " + registerToName(rt) + ", " + to_string(shamt);
                 break;
             case 0x24:
-                assemblyInstruction = "and " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                initialAssemblyInstruction = assemblyInstruction = "and " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x25:
-                assemblyInstruction = "or " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                initialAssemblyInstruction = assemblyInstruction = "or " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x26:
-                assemblyInstruction = "xor " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                initialAssemblyInstruction = assemblyInstruction = "xor " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x27:
-                assemblyInstruction = "nor " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                initialAssemblyInstruction = assemblyInstruction = "nor " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x0C:
-                assemblyInstruction = "syscall";
+                initialAssemblyInstruction = assemblyInstruction = "syscall";
                 break;
             default:
-                assemblyInstruction = "Unknown R-Format Instruction";
+                initialAssemblyInstruction = assemblyInstruction = "Unknown R-Format Instruction";
         }
     }
     else if (opcode != 0 && opcode != 2 && opcode != 3 && opcode != 16 && opcode != 17 && opcode != 18 && opcode != 19)
@@ -134,75 +135,75 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi, bool i
         {
             case 0x08:
                 if (rs == 0 && isAddi == false)
-                    assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
+                    initialAssemblyInstruction = assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
                 else //Check on different test cases
                     if (isAddi == 1) {
-                        assemblyInstruction ="";
+                        initialAssemblyInstruction = assemblyInstruction ="";
                     }
                     else
-                        assemblyInstruction = "addi " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
+                        initialAssemblyInstruction = assemblyInstruction = "addi " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
                 addiImm = signedImm;
                 break;
             case 0x09:
                 if (rs == 0)
-                    assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
+                    initialAssemblyInstruction = assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
                 else
-                    assemblyInstruction = "addiu " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
+                    initialAssemblyInstruction = assemblyInstruction = "addiu " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
                 break;
             case 0x0C:
-                assemblyInstruction = "andi " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
+                initialAssemblyInstruction = assemblyInstruction = "andi " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
                 break;
             case 0x23:
-                assemblyInstruction =  "lw " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
+                initialAssemblyInstruction = assemblyInstruction =  "lw " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
                 break;
             case 0x2B:
-                assemblyInstruction = "sw " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
+                initialAssemblyInstruction = assemblyInstruction = "sw " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
                 break;
             case 0x20:
-                assemblyInstruction = "lb " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
+                initialAssemblyInstruction = assemblyInstruction = "lb " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
                 break;
             case 0x28:
-                assemblyInstruction = "sb " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
+                initialAssemblyInstruction = assemblyInstruction = "sb " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
                 break;
             case 0x21:
-                assemblyInstruction = "lh " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
+                initialAssemblyInstruction = assemblyInstruction = "lh " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
                 break;
             case 0x29:
-                assemblyInstruction = "sh " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
+                initialAssemblyInstruction = assemblyInstruction = "sh " + registerToName(rt) + ", " + to_string(signedImm) + "(" + registerToName(rs) + ")";
                 break;
             case 0x0A:
-                assemblyInstruction = "slti " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
+                initialAssemblyInstruction = assemblyInstruction = "slti " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
                 break;
             case 0x0B:
-                assemblyInstruction = "sltiu " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
+                initialAssemblyInstruction = assemblyInstruction = "sltiu " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
                 break;
             case 0x0D:
                 pseudo = "ori " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
                 if (li == false)
-                    assemblyInstruction = pseudo;
+                    initialAssemblyInstruction = assemblyInstruction = pseudo;
                 else
                     if(li == true)
-                        assemblyInstruction = "li " + registerToName(rt) + ", " + to_string((liImm<<16) + imm);
+                        initialAssemblyInstruction = assemblyInstruction = "li " + registerToName(rt) + ", " + to_string((liImm<<16) + imm);
                 break;
             case 0x0E:
-                assemblyInstruction = "xori " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
+                initialAssemblyInstruction = assemblyInstruction = "xori " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
                 break;
             case 0x0F:
                 pseudo = "lui " + registerToName(rt) + ", " + to_string(imm);
                 if (li == false)
-                    assemblyInstruction = pseudo;
+                    initialAssemblyInstruction = assemblyInstruction = pseudo;
                 else
                     liImm = imm;
-                assemblyInstruction ="";
+                initialAssemblyInstruction = assemblyInstruction ="";
                 break;
             case 0x04:
-                assemblyInstruction = "beq " + registerToName(rs) + ", " + registerToName(rt) + ", " /*+ to_string(signedImm)*/;
+                initialAssemblyInstruction = assemblyInstruction = "beq " + registerToName(rs) + ", " + registerToName(rt) + ", " /*+ to_string(signedImm)*/;
                 break;
             case 0x05:
-                assemblyInstruction = "bne " + registerToName(rs) + ", " + registerToName(rt) + ", "/*+ to_string(signedImm)*/;
+                initialAssemblyInstruction = assemblyInstruction = "bne " + registerToName(rs) + ", " + registerToName(rt) + ", "/*+ to_string(signedImm)*/;
                 break;
             default:
-                assemblyInstruction = "Unknown I-Format Instruction";
+                initialAssemblyInstruction = assemblyInstruction = "Unknown I-Format Instruction";
                 break;
         }
     }
@@ -211,13 +212,13 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi, bool i
         switch (opcode)
         {
             case 0x02:
-                assemblyInstruction = "j " ;
+                initialAssemblyInstruction = assemblyInstruction = "j " ;
                 break;
             case 0x03:
-                assemblyInstruction = "jal " ;
+                initialAssemblyInstruction =  assemblyInstruction = "jal " ;
                 break;
             default:
-                assemblyInstruction = "Unknown J-Format Instruction" ;
+                initialAssemblyInstruction = assemblyInstruction = "Unknown J-Format Instruction" ;
                 break;
         }
     }
@@ -277,7 +278,7 @@ string Instruction::toBinary(int n, int size, bool sign) const
         s.push(n % 2);
         n /= 2;
     }
-    while (s.size() < size)
+    while ((int)(s.size()) < size)
         s.push(0);
     while (!s.empty())
     {
@@ -294,7 +295,7 @@ string Instruction::twosCompliment(string binary, int size) const
     string answer = "";
     for (int i = 0; i < size; i++)
         answer += '0';
-    for (int i = 0; i < binary.length(); i++)
+    for (int i = 0; i < (int)(binary.length()); i++)
         binary[i] = (binary[i] == '0') ? '1' : '0';
     char carry = (binary[binary.length() - 1] == '1') ? '1' : '0';
     answer[answer.length() - 1] = (binary[binary.length() - 1] == '1') ? '0' : '1';
@@ -388,7 +389,7 @@ void Instruction::setJFormat(string instruction, int & idx)
     while (!isdigit(assemblyInstruction[idx]))
         idx++;
     string temp = "";
-    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < assemblyInstruction.length())
+    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < (int)(assemblyInstruction.length()))
     {
         temp += assemblyInstruction[idx];
         idx++;
@@ -450,7 +451,7 @@ void Instruction::setShiftInstruction(string instruction, int & idx)
     temp = "";
     while (!isdigit(assemblyInstruction[idx]))
         idx++;
-    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < assemblyInstruction.length())
+    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < (int)(assemblyInstruction.length()))
     {
         temp += assemblyInstruction[idx];
         idx++;
@@ -468,7 +469,7 @@ void Instruction::setJrInstruction(string instruction, int & idx)
     string temp = "";
     while (assemblyInstruction[idx] != '$')
         idx++;
-    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < assemblyInstruction.length())
+    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < (int)(assemblyInstruction.length()))
     {
         temp += assemblyInstruction[idx];
         idx++;
@@ -500,7 +501,7 @@ void Instruction::setNormalRFormat(string instruction, int & idx)
     temp = "";
     while (assemblyInstruction[idx] != '$')
         idx++;
-    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < assemblyInstruction.length())
+    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < (int)(assemblyInstruction.length()))
     {
         temp += tolower(assemblyInstruction[idx]);
         idx++;
@@ -557,7 +558,7 @@ void Instruction::setLui(int & idx)
     temp = "";
     while (!isdigit(assemblyInstruction[idx]) && assemblyInstruction[idx] != '-')
         idx++;
-    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < assemblyInstruction.length())
+    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < (int)(assemblyInstruction.length()))
     {
         temp += assemblyInstruction[idx];
         idx++;
@@ -590,7 +591,7 @@ void Instruction::setBranchInstruction(string instruction, int & idx)
     temp = "";
     while (!isdigit(assemblyInstruction[idx]) && assemblyInstruction[idx] != '-')
         idx++;
-    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < assemblyInstruction.length())
+    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < (int)(assemblyInstruction.length()))
     {
         temp += assemblyInstruction[idx];
         idx++;
@@ -656,7 +657,7 @@ void Instruction::setNormalIFormat(string instruction, int & idx)
     temp = "";
     while (!isdigit(assemblyInstruction[idx]) && assemblyInstruction[idx] != '-')
         idx++;
-    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < assemblyInstruction.length())
+    while (assemblyInstruction[idx] != ' ' && assemblyInstruction[idx] != '\t' && assemblyInstruction[idx] != '\r' && assemblyInstruction[idx] != '\n' && idx < (int)(assemblyInstruction.length()))
     {
         temp += tolower(assemblyInstruction[idx]);
         idx++;
@@ -718,6 +719,11 @@ int Instruction::getAddress() const
 string Instruction::getAssemblyInstruction() const
 {
     return assemblyInstruction;
+}
+
+string Instruction::getInitialAssemblyInstruction() const
+{
+    return initialAssemblyInstruction;
 }
 
 string Instruction::getBinaryInstruction() const

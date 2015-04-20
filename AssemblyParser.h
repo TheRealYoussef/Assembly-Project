@@ -2,12 +2,11 @@
 #define ASSEMBLYPARSER_H
 
 #include "Memory.h"
-#include "GLOBALS.h"
-
 #include "Instruction.h"
 
+#include <QTextBrowser>
+
 #include <string>
-#include <fstream>
 #include <map>
 #include <vector>
 
@@ -22,29 +21,25 @@ private:
 
 	map<string, unsigned int>labels;
 
-	void getDataLabels();
+    void getLabels(QTextBrowser *);
 
-	void getTextLabels();
+    void parseAssembly(Memory &, vector<Instruction> &, QTextBrowser *);
 
-	bool isInstruction(const string &);
+    bool isInstruction(const string &) const;
 
-	void parseData(Memory &);
-
-	void parseText(vector<Instruction> &);
-
-	int wordHexaToDecimal(const string &);
+    int wordHexaToDecimal(const string &) const;
 	
-	short halfHexaToDecimal(const string &);
+    short halfHexaToDecimal(const string &) const;
 
-	char byteHexaToDecimal(const string &);
+    char byteHexaToDecimal(const string &) const;
 
-	void toChar(string, vector<char> &) const;
+    void toChar(const string &, vector<char> &) const;
 
 	char specialCharacter(char) const;
 
 public:
 
-	AssemblyParser(const string & assemblyCodeFile, const string & textDumpFile, const string & memoryDumpFile, Memory & memory, vector<Instruction> & instructionVector);
+    AssemblyParser(const string & assemblyCodeFile, const string & textDumpFile, const string & memoryDumpFile, Memory & memory, vector<Instruction> & instructionVector, QTextBrowser *);
 
 };
 

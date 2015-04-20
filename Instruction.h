@@ -10,7 +10,7 @@ class Instruction
     
 public:
     Instruction();
-    void assemble(string);
+    void assemble(const string &, const string &);
     void dissassemble(unsigned int, int, int,bool, bool, bool);
     enum InstructionFormat { R_FORMAT, I_FORMAT, J_FORMAT };
     InstructionFormat getFormat() const;
@@ -23,9 +23,11 @@ public:
     int getImm() const;
     int getSignedImm() const;
     int getAddress() const;
+    string getInitialAssemblyInstruction() const;
     string getAssemblyInstruction() const;
     string getBinaryInstruction() const;
 private:
+    string initialAssemblyInstruction;
     string assemblyInstruction;
     string binaryInstruction;
     string pseudo;

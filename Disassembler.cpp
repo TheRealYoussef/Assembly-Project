@@ -41,11 +41,11 @@ void Disassembler::getData()
         }   
     }
     else
-        cerr<<"error in opening disassembling file\n";
+        cerr << "Error in opening disassembler file.\n";
     
-    for (int i = 0 ; i < instfile.size(); i++) 
+    for (int i = 0 ; i < (int)(instfile.size()); i++)
 	{    
-		if (i<instfile.size()-1)
+        if (i<(int)(instfile.size())-1)
 		{
 			isSub = ((instfile[i] >> 26 == 0) && ((instfile[i + 1] & 0x3F) == 0x22) && (instfile[i - 1] >> 26 == 0x08));
 			isAddi = ((instfile[i + 1] >> 26 == 0) && ((instfile[i + 1] & 0x3F) == 0x22)) && (instfile[i] >> 26 == 0x08);
@@ -78,7 +78,7 @@ void Disassembler::display(string path, Simulator& simulator)
 		
 		int counter = 0; //used in assigning numbers to the labels
         
-		for (int i = 0; i < instfile.size(); i++)
+        for (int i = 0; i < (int)(instfile.size()); i++)
         {
             address =  (instfile[i] & 0x3FFFFFF) << 2; // extracting the address
             jumpIndex= (address - 0x00400000)/4; //the index of the label
@@ -105,13 +105,13 @@ void Disassembler::display(string path, Simulator& simulator)
         
         outfile<<".text"<<endl;
         
-        for (int i = 0 ; i < labels.size() ; i++) 
+        for (int i = 0 ; i < (int)(labels.size()); i++)
 		{    
             //Printing labels
             if (labels[i] !="" )
                 outfile <<endl<<labels[i] << "          " << endl;
             
-			if (i < inst.size())
+            if (i < (int)(inst.size()))
 			{
 				if (inst[i].getAssemblyInstruction() != "")
 				{
@@ -139,7 +139,7 @@ void Disassembler::display(string path, Simulator& simulator)
         }
     }
     else
-        cout <<" Error in opening disassembler output file\n";
+        cerr <<"Error in opening disassembler output file.\n";
 }
 
 

@@ -5,6 +5,8 @@
 #include "Memory.h"
 #include "Instruction.h"
 
+#include <QTextBrowser>
+
 #include <fstream>
 #include <vector>
 
@@ -21,7 +23,7 @@ public:
     vector <Instruction> program;
     Simulator();
     ~Simulator();
-    void add(Instruction*);
+    void add(Instruction*, QTextBrowser *);
     void addi(Instruction*);
     void addiu(Instruction*);
     void addu(Instruction*);
@@ -48,10 +50,10 @@ public:
     void jr(Instruction*);
     void jal(Instruction*);
     void lui(Instruction*);
-    void syscall(Instruction*);
-	void run(Instruction *);
-    void simulate();
-	void displayRegister();
+    void syscall(QTextBrowser *);
+    void run(Instruction *, QTextBrowser *);
+    void simulate(const string &, QTextBrowser *);
+    void displayRegister(QTextBrowser *);
 };
 
 #endif
