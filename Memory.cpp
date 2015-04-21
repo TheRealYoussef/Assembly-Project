@@ -13,6 +13,11 @@ Memory::Memory()
 	memset(memory, 0, sizeof memory);
 }
 
+void Memory::getPointers(QTextBrowser *)
+{
+    this->textBrowser = textBrowser;
+}
+
 char Memory::loadByte(unsigned int addr)
 {
     addr -= 0x10010000;
@@ -41,7 +46,7 @@ void Memory::storeHalf(unsigned int addr, short val)
 {
 	if (addr % 2 != 0)
 	{
-        cerr << "Error in memory store half.\n";
+        textBrowser->append("Error in memory store half.\n");
 		TERMINATE = true;
 	}
 	else
@@ -56,7 +61,7 @@ void Memory::storeWord(unsigned int addr, int val)
 {
 	if (addr % 4 != 0)
 	{
-        cerr << "Error in memory store word.\n";
+        textBrowser->append("Error in memory store word.\n");
 		TERMINATE = true;
 	}
 	else
@@ -108,7 +113,7 @@ void Memory::MemoryArray(string path)
     }
     else
     {
-        cerr << "Error in opening memory file.\n";
+        textBrowser->append("Error in opening memory file.\n");
 		TERMINATE = true;
     }
 }

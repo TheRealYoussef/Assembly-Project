@@ -1,6 +1,8 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
+#include <QTextBrowser>
+
 #include <string>
 
 using namespace std;
@@ -10,7 +12,10 @@ class Memory
 private:
 	//Address pointer for filling memory from data segment
 	unsigned int currAddress;
+    QTextBrowser *textBrowser;
 public:
+    Memory();
+    void getPointers(QTextBrowser *);
     char memory[8192];
     char loadByte(unsigned int);
     int loadWord(unsigned int);
@@ -21,7 +26,6 @@ public:
 	void MemoryArray(string);
 	void memoryDump(const string &);
 	//Filling memory from data segment
-	Memory();
 	void storeByte(char);
 	void storeHalf(short);
 	void storeWord(int);

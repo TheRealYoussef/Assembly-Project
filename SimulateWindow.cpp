@@ -29,6 +29,7 @@ void SimulateWindow::getFiles(const QString assemblyCodeFile, const QString text
 {
     ui->textBrowser->clear();
     Simulator simulator;
+    simulator.memory.getPointers(ui->textBrowser);
     AssemblyParser assemblyParser(assemblyCodeFile.toStdString(), textDumpFile.toStdString(), memoryDumpFile.toStdString(), simulator.memory, simulator.program, ui->textBrowser);
     if (!TERMINATE)
         simulator.simulate(registerUpdateFile.toStdString(), ui->textBrowser);
