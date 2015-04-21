@@ -343,9 +343,10 @@ void Simulator::simulate(const string & registerUpdateFile, QTextBrowser *textBr
 {
     outfile.open(registerUpdateFile.c_str());
     outfile << "Initial State:\n";
+    displayRegister(textBrowser);
     int i;
-    do{
-        displayRegister(textBrowser);
+    do
+    {
         i=(cpu.programCounter-0x00400000)/4;
         cpu.programCounter+=4;
         if (i>=(int)(program.size()))
@@ -353,6 +354,7 @@ void Simulator::simulate(const string & registerUpdateFile, QTextBrowser *textBr
         run(&program[i], textBrowser);
 		cpu.registers[0] = 0;
         outfile << program[i].getInitialAssemblyInstruction() << '\n';
+        displayRegister(textBrowser);
     } while(!TERMINATE);
 }
 
