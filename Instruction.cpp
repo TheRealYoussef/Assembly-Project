@@ -183,7 +183,7 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi, bool i
                 initialAssemblyInstruction = assemblyInstruction = "sltiu " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
                 break;
             case 0x0D:
-             initialAssemblyInstruction  = "li " + registerToName(rt) + ", " + to_string((liImm<<16) + imm);
+             initialAssemblyInstruction  = "ori " + registerToName(rt) + ", " + to_string((liImm<<16) + imm);
                 pseudo = "ori " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
                 if (li == false)
                     assemblyInstruction = pseudo;
