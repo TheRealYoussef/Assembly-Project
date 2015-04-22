@@ -78,18 +78,20 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi, bool i
                 initialAssemblyInstruction = assemblyInstruction = "add " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x21:
+             initialAssemblyInstruction = assemblyInstruction = "addu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 if (rs == 0) {
-                    initialAssemblyInstruction = assemblyInstruction = "move " + registerToName(rd) + ", " + registerToName(rt);
+                    assemblyInstruction = "move " + registerToName(rd) + ", " + registerToName(rt);
                 }
                 else
-                    initialAssemblyInstruction = assemblyInstruction = "addu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                   assemblyInstruction = "addu " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 break;
             case 0x22:
+             initialAssemblyInstruction = "sub " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 //Re-test this part
                 if (subi == 1)
-                    initialAssemblyInstruction = assemblyInstruction = "subi " + registerToName(rd) + ", " + registerToName(rs) + ", " + to_string(addiImm);
+                    assemblyInstruction = "subi " + registerToName(rd) + ", " + registerToName(rs) + ", " + to_string(addiImm);
                 else
-                    initialAssemblyInstruction = assemblyInstruction = "sub " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
+                     assemblyInstruction = "sub " + registerToName(rd) + ", " + registerToName(rs) + ", " + registerToName(rt);
                 
                 break;
             case 0x23:
@@ -133,22 +135,25 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi, bool i
     {
         switch (opcode)
         {
+        	
             case 0x08:
+             initialAssemblyInstruction =  "addi " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
                 if (rs == 0 && isAddi == false)
-                    initialAssemblyInstruction = assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
+                    assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
                 else //Check on different test cases
                     if (isAddi == 1) {
-                        initialAssemblyInstruction = assemblyInstruction ="";
+                        assemblyInstruction ="";
                     }
                     else
-                        initialAssemblyInstruction = assemblyInstruction = "addi " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
+                      assemblyInstruction = "addi " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
                 addiImm = signedImm;
                 break;
             case 0x09:
+             initialAssemblyInstruction = = "addiu " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
                 if (rs == 0)
-                    initialAssemblyInstruction = assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
+                     assemblyInstruction = "li " + registerToName(rt) + ", " + to_string(signedImm);
                 else
-                    initialAssemblyInstruction = assemblyInstruction = "addiu " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
+                     assemblyInstruction = "addiu " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
                 break;
             case 0x0C:
                 initialAssemblyInstruction = assemblyInstruction = "andi " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
@@ -178,23 +183,25 @@ void Instruction::setAssembleyInstruction(int tempd, int tempt,bool subi, bool i
                 initialAssemblyInstruction = assemblyInstruction = "sltiu " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(signedImm);
                 break;
             case 0x0D:
+             initialAssemblyInstruction  = "li " + registerToName(rt) + ", " + to_string((liImm<<16) + imm);
                 pseudo = "ori " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
                 if (li == false)
-                    initialAssemblyInstruction = assemblyInstruction = pseudo;
+                    assemblyInstruction = pseudo;
                 else
                     if(li == true)
-                        initialAssemblyInstruction = assemblyInstruction = "li " + registerToName(rt) + ", " + to_string((liImm<<16) + imm);
+                        assemblyInstruction = "li " + registerToName(rt) + ", " + to_string((liImm<<16) + imm);
                 break;
             case 0x0E:
                 initialAssemblyInstruction = assemblyInstruction = "xori " + registerToName(rt) + ", " + registerToName(rs) + ", " + to_string(imm);
                 break;
             case 0x0F:
+           initialAssemblyInstruction =  "lui " + registerToName(rt) + ", " + to_string(imm);
                 pseudo = "lui " + registerToName(rt) + ", " + to_string(imm);
                 if (li == false)
-                    initialAssemblyInstruction = assemblyInstruction = pseudo;
+                    assemblyInstruction = pseudo;
                 else
                     liImm = imm;
-                initialAssemblyInstruction = assemblyInstruction ="";
+                 assemblyInstruction ="";
                 break;
             case 0x04:
                 initialAssemblyInstruction = assemblyInstruction = "beq " + registerToName(rs) + ", " + registerToName(rt) + ", " /*+ to_string(signedImm)*/;
