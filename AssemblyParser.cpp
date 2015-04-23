@@ -6,18 +6,18 @@
 
 using namespace std;
 
-AssemblyParser::AssemblyParser(const string & file, const string & textDumpFile, const string & memoryDumpFile, Memory & memory, vector<Instruction> & inst, QTextBrowser *textBrowser)
+AssemblyParser::AssemblyParser(const string & file, const string & textDumpFile, const string & memoryDumpFile, Memory & memory, vector<Instruction> & inst)
 {
 	this->assemblyFile = file;
 	this->textDumpFile = textDumpFile;
 	this->memoryDumpFile = memoryDumpFile;
 	//No need for comments, just parsing
-    getLabels(textBrowser);
+    getLabels();
     if (!TERMINATE)
-        parseAssembly(memory, inst, textBrowser);
+        parseAssembly(memory, inst);
 }
 
-void AssemblyParser::getLabels(QTextBrowser *textBrowser)
+void AssemblyParser::getLabels()
 {
 	unsigned int dataAddress = 0x10010000;
     unsigned int textAddress = 0x00400000;
@@ -224,7 +224,7 @@ void AssemblyParser::getLabels(QTextBrowser *textBrowser)
                         labels[str.substr(0, str.length() - 1)] = dataAddress;
 					else
 					{
-                        textBrowser->append("Parsing error.\n");
+                        cerr << "Parsing error.\n";
 						TERMINATE = true;
 					}
                     input >> str;
@@ -272,16 +272,14 @@ void AssemblyParser::getLabels(QTextBrowser *textBrowser)
 						}
 						else if (str[str.length() - 1] != ':')
 						{
-                            textBrowser->append("Parsing error!\n");
+							cerr << "Parsing error!\n";
 							TERMINATE = true;
 						}
 					}
-					input >> str;
+					
 					if (str[str.length() - 1] == ':')
-					{
 						labels[str.substr(0, str.length() - 1)] = textAddress;
-						input >> str;
-					}
+					input >> str;
 				}
 			}
 		}
@@ -289,12 +287,12 @@ void AssemblyParser::getLabels(QTextBrowser *textBrowser)
 	}
 	else
 	{
-        textBrowser->append("Failed to open assembly code file.\n");
+		cerr << "Failed to open assembly code file.\n";
 		TERMINATE = true;
 	}
 }
 
-void AssemblyParser::parseAssembly(Memory & memory, vector<Instruction> & inst, QTextBrowser *textBrowser)
+void AssemblyParser::parseAssembly(Memory & memory, vector<Instruction> & inst)
 {
     unsigned int textAddress = 0x00400000;
     string str;
@@ -303,7 +301,7 @@ void AssemblyParser::parseAssembly(Memory & memory, vector<Instruction> & inst, 
     ifstream input;
     ofstream output;
     input.open(assemblyFile.c_str());
-    output.open(textDumpFile.c_str());
+    output.open(textDumpFile.c_str(), ios_base::out | ios_base::binary);
     if (!input.fail() && !output.fail())
     {
         input >> str;
@@ -989,9 +987,9 @@ void AssemblyParser::parseAssembly(Memory & memory, vector<Instruction> & inst, 
     else
     {
         if (input.fail())
-            textBrowser->append("Failed to open assembly code file.\n");
+			cerr << "Failed to open assembly code file.\n";
         else
-            textBrowser->append("Failed to open text dump file.\n");
+			cerr << "Failed to open text dump file.\n";
         TERMINATE = true;
     }
 }
