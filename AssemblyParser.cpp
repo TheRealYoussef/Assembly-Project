@@ -235,7 +235,9 @@ void AssemblyParser::getLabels()
 				input >> str;
 				while (str != ".data" && !input.eof() && !TERMINATE)
 				{
-					if (str[0] == '#')
+					if (str[str.length() - 1] == ':')
+						labels[str.substr(0, str.length() - 1)] = textAddress;
+					else if (str[0] == '#')
 					{
 						char c;
 						input.get(c);
@@ -276,10 +278,12 @@ void AssemblyParser::getLabels()
 							TERMINATE = true;
 						}
 					}
-					
-					if (str[str.length() - 1] == ':')
-						labels[str.substr(0, str.length() - 1)] = textAddress;
 					input >> str;
+					if (str[str.length() - 1] == ':')
+					{
+						labels[str.substr(0, str.length() - 1)] = textAddress;
+						input >> str;
+					}
 				}
 			}
 		}
